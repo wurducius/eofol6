@@ -1,7 +1,7 @@
 import { button, container, defineComponent, div, forceUpdateEofol, generateId, h1, renderEofol } from "../src"
+import { Children } from "../src/types"
 
-// @ts-ignore
-const eButton = (children, onclick) =>
+const eButton = (children: Children, onclick: () => void) =>
   button(
     children,
     {
@@ -15,10 +15,10 @@ const eButton = (children, onclick) =>
 
 const rand = defineComponent("rand", {
   state: { id: generateId() },
-  // @ts-ignore
   render: (state, setState) =>
     div(
       [
+        // @ts-ignore
         div(`Render id: ${state.id}`),
         eButton("Refresh", () => {
           setState({ id: generateId() })

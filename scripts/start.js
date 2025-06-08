@@ -1,6 +1,8 @@
-const Webpack = require("webpack")
-const WebpackDevServer = require("webpack-dev-server")
-const getWebpackConfig = require("../webpack/webpack.config.js")
+import Webpack from "webpack"
+import WebpackDevServer from "webpack-dev-server"
+import getWebpackConfigImport from "../webpack/webpack.config.cjs"
+
+const getWebpackConfig = getWebpackConfigImport.default
 
 const argv = process.argv
 

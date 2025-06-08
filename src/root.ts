@@ -1,12 +1,13 @@
 import { renderVdom } from "./vdom"
 import { arrayCombinator, domClearChildren } from "./util"
 import { getVdom, setVdom } from "./internal"
+import { VDOMItem } from "./types"
 
-let rootInternal
+let rootInternal: HTMLElement | null
 
 const getRoot = () => rootInternal
 
-const setRoot = (rootId) => {
+const setRoot = (rootId: string) => {
   rootInternal = document.getElementById(rootId)
   return rootInternal
 }
@@ -14,17 +15,19 @@ const setRoot = (rootId) => {
 const renderEofolInternal = () => {
   const root = getRoot()
   arrayCombinator(renderVdom(getVdom()), (item) => {
-    root.appendChild(item)
+    root?.appendChild(item)
   })
 }
 
 export const forceUpdateEofol = () => {
   const root = getRoot()
-  domClearChildren(root)
-  renderEofolInternal()
+  if (root) {
+    domClearChildren(root)
+    renderEofolInternal()
+  }
 }
 
-export const renderEofol = (rootId, vdom) => {
+export const renderEofol = (rootId: string, vdom: VDOMItem) => {
   const root = setRoot(rootId)
   if (root) {
     setVdom(vdom)

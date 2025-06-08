@@ -1,4 +1,4 @@
-export const domClearChildren = (domElement) => {
+export const domClearChildren = (domElement: Element) => {
   const childrenToDelete = []
   for (let i = 0; i < domElement.childNodes.length; i++) {
     childrenToDelete.push(domElement.childNodes.item(i))

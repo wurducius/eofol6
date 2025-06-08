@@ -1,7 +1,9 @@
 import fs from "node:fs"
 import path from "path"
 import webpack from "webpack"
-import getWebpackConfig from "../../webpack/webpack.config.js"
+import getWebpackConfigImport from "../../webpack/webpack.config.cjs"
+
+const getWebpackConfig = getWebpackConfigImport.default
 
 const productionOptions = { mode: "production", sourceMap: false }
 

@@ -21,6 +21,7 @@
   "author": "Jakub Eliáš <wurducius@gmail.com>",
   "license": "MIT",
   "description": "All inclusive web framework with zero configuration, batteries included!",
+  "type": "module",
   "dependencies": {
     "http-server": "14.1.1",
     "rimraf": "6.0.1",

@@ -41,4 +41,4 @@ class EofolCompilerWebpackPlugin {
   }
 }
 
-module.exports = EofolCompilerWebpackPlugin
+module.exports.default = EofolCompilerWebpackPlugin

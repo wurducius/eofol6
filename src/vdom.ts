@@ -2,24 +2,27 @@ import { getDef, getInstance, setInstance } from "./internal"
 import { arrayCombinator } from "./util"
 import { logEofolError } from "./log"
 import { forceUpdateEofol } from "./root"
+import { State, VDOMItem } from "./types"
 
-const renderTagDom = (vdom) => {
+const renderTagDom = (vdom: VDOMItem) => {
   const element = document.createElement(vdom.tag)
   element.setAttribute("key", vdom.key)
   if (vdom.attributes) {
     Object.keys(vdom.attributes).forEach((attributeName) => {
+      // @ts-ignore
       element.setAttribute(attributeName, vdom.attributes[attributeName])
     })
   }
   if (vdom.properties) {
     Object.keys(vdom.properties).forEach((propertyName) => {
+      // @ts-ignore
       element[propertyName] = vdom.properties[propertyName]
     })
   }
   return element
 }
 
-const renderCustomDom = (vdom) => {
+const renderCustomDom = (vdom: VDOMItem) => {
   const def = getDef(vdom.tag)
   if (def) {
     const instance = getInstance(vdom.key)
@@ -32,20 +35,20 @@ const renderCustomDom = (vdom) => {
       setInstance(vdom.key, nextInstance)
       state = initialState
     }
-    const setState = (nextState) => {
+    const setState = (nextState: State) => {
       const oldInstance = getInstance(vdom.key)
       const next = { ...oldInstance, state: nextState }
       setInstance(vdom.key, next)
       forceUpdateEofol()
     }
-    const renderedVdom = def.render(state, setState)
+    const renderedVdom = def.render(state ?? {}, setState)
     return renderVdom(renderedVdom)
   } else {
     logEofolError(`Def "${vdom.tag}" not found.`)
   }
 }
 
-const renderDom = (vdom) => {
+const renderDom = (vdom: VDOMItem) => {
   if (vdom.type === "custom") {
     return renderCustomDom(vdom)
   } else {
@@ -53,9 +56,7 @@ const renderDom = (vdom) => {
   }
 }
 
-// const mount = () => {}
-
-const renderVdomImpl = (rendered, vdom) => {
+const renderVdomImpl = (rendered: HTMLElement, vdom: VDOMItem) => {
   const renderedChild = renderVdom(vdom)
   if (typeof renderedChild === "string") {
     rendered.innerHTML = renderedChild
@@ -64,7 +65,7 @@ const renderVdomImpl = (rendered, vdom) => {
   }
 }
 
-export const renderVdom = (vdom) => {
+export const renderVdom = (vdom: VDOMItem) => {
   if (vdom === undefined) {
     return ""
   } else if (typeof vdom === "string") {

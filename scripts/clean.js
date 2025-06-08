@@ -1,5 +1,5 @@
-const { rimraf } = require("rimraf")
-const { join } = require("path")
+import { rimraf } from "rimraf"
+import { join } from "path"
 
 const CWD = process.cwd()
 

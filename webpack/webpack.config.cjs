@@ -1,6 +1,9 @@
 const path = require("path")
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
-const EofolPlugin = require("./eofol-webpack-plugin")
+const BundleAnalyzerPluginImport = require("webpack-bundle-analyzer")
+const EofolPluginImport = require("./eofol-webpack-plugin.cjs")
+
+const EofolPlugin = EofolPluginImport.default
+const BundleAnalyzerPlugin = BundleAnalyzerPluginImport.BundleAnalyzerPlugin
 
 const CWD = process.cwd()
 
@@ -14,7 +17,7 @@ const buildOptionsDefault = {
   distDirname: "dist",
 }
 
-module.exports = (args) => {
+module.exports.default = (args) => {
   const buildOptions = { ...buildOptionsDefault, ...(args ?? {}) }
 
   return {
