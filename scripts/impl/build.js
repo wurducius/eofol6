@@ -3,7 +3,9 @@ import path from "path"
 import webpack from "webpack"
 import getWebpackConfig from "../../webpack/webpack.config.js"
 
-const webpackConfig = getWebpackConfig()
+const productionOptions = { mode: "production", sourceMap: false }
+
+const webpackConfig = getWebpackConfig(productionOptions)
 
 const CWD = process.cwd()
 

@@ -21,6 +21,8 @@ const CWD = process.cwd()
 const packageLockPath = join(CWD, "package-lock.json")
 const nodeModulesPath = join(CWD, "node_modules")
 
+console.log("Eofol6 reinstall")
+
 if (existsSync(packageLockPath)) {
   rmSync(packageLockPath)
   console.log("Deleted package-lock.json")

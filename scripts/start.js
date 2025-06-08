@@ -22,9 +22,10 @@ const devServerOptions = { ...webpackConfig.devServer, open: true }
 const server = new WebpackDevServer(devServerOptions, compiler)
 
 const runServer = async () => {
-  console.log("Eofol6")
+  console.log("Eofol6 development")
   console.log("Starting server...")
   await server.start()
 }
 
+console.clear()
 runServer()
