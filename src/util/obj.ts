@@ -1,5 +1,5 @@
-export const mergeDeep = (...objects) => {
-  const isObject = (obj) => obj && typeof obj === "object"
+export const mergeDeep = (...objects: Record<string, any>[]) => {
+  const isObject = (obj: object) => obj && typeof obj === "object"
   return objects.reduce((prev, obj) => {
     Object.keys(obj).forEach((key) => {
       const pVal = prev[key]
@@ -16,7 +16,7 @@ export const mergeDeep = (...objects) => {
   }, {})
 }
 
-export const ax = (fields, initial) =>
+export const ax = (fields: Record<string, any>, initial?: Object) =>
   Object.keys(fields).reduce((acc, next) => {
     const value = fields[next]
     if (value !== undefined) {

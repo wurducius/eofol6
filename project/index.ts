@@ -1,7 +1,17 @@
-import { button, container,defineComponent, div, forceUpdateEofol, generateId, h1, renderEofol } from "../src"
+import {
+  button,
+  Children,
+  container,
+  defineComponent,
+  div,
+  forceUpdateEofol,
+  generateId,
+  h1,
+  registerSw,
+  renderEofol,
+} from "../src"
 
-
-const eButton = (children, onclick) =>
+const eButton = (children: Children, onclick: () => void) =>
   button(
     children,
     {
@@ -9,7 +19,7 @@ const eButton = (children, onclick) =>
     },
     {
       style:
-        "height: 40px; padding: 0 16px; background-color: purple; color: darkgrey; border: 2px solid black; cursor: pointer; font-weight: 500;",
+        "height: 40px; padding: 0 16px; background-color: darkmagenta; color: lightgrey; border: 2px solid black; cursor: pointer; font-weight: 500;",
     },
   )
 
@@ -18,6 +28,7 @@ const rand = defineComponent("rand", {
   render: (state, setState) =>
     div(
       [
+        // @ts-ignore
         div(`Render id: ${state.id}`),
         eButton("Refresh", () => {
           setState({ id: generateId() })
@@ -39,3 +50,5 @@ renderEofol(
     }),
   ]),
 )
+
+registerSw()

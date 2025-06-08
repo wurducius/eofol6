@@ -1,4 +1,4 @@
 import { build } from "./impl/build.js"
 
-console.log("Eofol6")
+console.log("Eofol6 build")
 build()

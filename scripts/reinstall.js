@@ -1,7 +1,7 @@
-const { execSync, spawn } = require("child_process")
-const { rmSync, existsSync } = require("node:fs")
-const { join } = require("node:path")
-const { spawnOptions } = require("./impl/spawn")
+import { execSync, spawn } from "child_process"
+import { rmSync, existsSync } from "node:fs"
+import { join } from "node:path"
+import { spawnOptions } from "./impl/spawn.js"
 
 const argv = process.argv
 
@@ -20,6 +20,8 @@ const CWD = process.cwd()
 
 const packageLockPath = join(CWD, "package-lock.json")
 const nodeModulesPath = join(CWD, "node_modules")
+
+console.log("Eofol6 reinstall")
 
 if (existsSync(packageLockPath)) {
   rmSync(packageLockPath)

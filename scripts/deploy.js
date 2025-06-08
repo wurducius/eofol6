@@ -1,7 +1,8 @@
-const { execSync } = require("child_process")
-const { join } = require("path")
-const { spawnOptions } = require("./impl/spawn")
+import { execSync } from "child_process"
+import { join } from "path"
+import { spawnOptions } from "./impl/spawn.js"
 
+console.log("Eofol6 deploy")
 console.log("Deploying project...")
 
 const resultCode = execSync(join(process.cwd(), "scripts", "impl", "deploy.bat"), spawnOptions)
