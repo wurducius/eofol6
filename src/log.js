@@ -1,3 +1,3 @@
 export const logEofolError = (msg) => {
-  console.error("Eofol [ERROR]: " + msg)
+  console.error(`Eofol [ERROR]: ${msg}`)
 }
