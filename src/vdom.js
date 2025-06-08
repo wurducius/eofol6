@@ -41,7 +41,7 @@ const renderCustomDom = (vdom) => {
     const renderedVdom = def.render(state, setState)
     return renderVdom(renderedVdom)
   } else {
-    logEofolError('Def "' + vdom.tag + '" not found.')
+    logEofolError(`Def "${vdom.tag}" not found.`)
   }
 }
 

@@ -1,3 +1,5 @@
 export * from "./dom"
 export * from "./math"
 export * from "./combinator"
+export * from "./styles"
+export * from "./obj"

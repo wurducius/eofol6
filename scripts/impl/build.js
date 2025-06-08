@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "path"
 import webpack from "webpack"
-import webpackConfig from "../../webpack.config.js"
+import webpackConfig from "../../webpack/webpack.config.js"
 
 const CWD = process.cwd()
 
@@ -23,7 +23,7 @@ const buildWebpack = () => {
     if (err || stats.hasErrors()) {
       console.log(`Webpack error: ${err}`)
     } else {
-      console.log("Project built at " + distPath)
+      console.log(`Project built at ${distPath}`)
     }
   })
 }
