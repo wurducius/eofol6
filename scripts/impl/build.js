@@ -2,6 +2,7 @@ import fs from "node:fs"
 import path from "path"
 import webpack from "webpack"
 import getWebpackConfigImport from "../../webpack/webpack.config.cjs"
+import { error, prettySize, prettyTime, success } from "./util.js"
 
 const getWebpackConfig = getWebpackConfigImport.default
 
@@ -21,7 +22,7 @@ const touch = (path) => {
 }
 
 const copyPublicDir = (source, target) => {
-  fs.promises.readdir(source, { recursive: true }).then((dir) =>
+  return fs.promises.readdir(source, { recursive: true }).then((dir) =>
     dir.map((file) => {
       const sourcePath = path.join(source, file)
       const targetPath = path.join(target, file)
@@ -36,9 +37,9 @@ const copyPublicDir = (source, target) => {
 const buildWebpack = (callback) => {
   return webpack(webpackConfig, (err, stats) => {
     if (err || stats.hasErrors()) {
-      console.log(`Webpack error: ${err}`)
+      console.log(error(`Webpack error: ${err}`))
     } else {
-      console.log(`Project built at ${distPath}`)
+      console.log(success(`Project built at: ${distPath}`))
     }
     if (callback) {
       callback()
@@ -63,9 +64,22 @@ const touchBuildDirs = () => {
   })
 }
 
+const dirSize = async (directory) => {
+  const files = await fs.promises.readdir(directory)
+  const stats = files.map((file) => fs.promises.stat(path.join(directory, file)))
+  return (await Promise.all(stats)).reduce((accumulator, { size }) => accumulator + size, 0)
+}
+
 export const build = () => {
+  const start = new Date().valueOf()
   buildWebpack(() => {
     touchBuildDirs()
-    copyPublicDir(publicPath, distPath)
+    copyPublicDir(publicPath, distPath).then(() => {
+      const elapsed = new Date().valueOf() - start
+      dirSize(distPath).then((size) => {
+        console.log(success(`Build size: ${prettySize(size)}`))
+        console.log(success(`Compilation took: ${prettyTime(elapsed)}`))
+      })
+    })
   })
 }

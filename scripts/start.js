@@ -1,6 +1,7 @@
 import Webpack from "webpack"
 import WebpackDevServer from "webpack-dev-server"
 import getWebpackConfigImport from "../webpack/webpack.config.cjs"
+import { primary } from "./impl/util.js"
 
 const getWebpackConfig = getWebpackConfigImport.default
 
@@ -24,10 +25,11 @@ const devServerOptions = { ...webpackConfig.devServer, open: true }
 const server = new WebpackDevServer(devServerOptions, compiler)
 
 const runServer = async () => {
-  console.log("Eofol6 development")
-  console.log("Starting server...")
   await server.start()
 }
 
+console.log(primary("Eofol6 start"))
+console.log(primary("Starting server..."))
 console.clear()
+
 runServer()

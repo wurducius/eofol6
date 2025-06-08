@@ -8,8 +8,7 @@ import {
   div,
   forceUpdateEofol,
   h1,
-  registerSw,
-  renderEofol,
+  mountEofol,
 } from "../src"
 
 const getRandomStringImpl = (length: number) => () =>
@@ -22,6 +21,7 @@ const getRandomString = getRandomStringImpl(17)
 
 const col = (children?: Children, attributes?: Attributes) =>
   div(children, { ...(attributes ?? {}), class: cx("col center", attributes?.class) })
+// eslint-disable-next-line no-unused-vars
 const row = (children?: Children, attributes?: Attributes) =>
   div(children, { ...(attributes ?? {}), class: cx("row", attributes?.class) })
 const center = (children?: Children, attributes?: Attributes) =>
@@ -41,12 +41,12 @@ const eButton = (children: Children, onclick: () => void) =>
 
 const rand = defineComponent("rand", {
   state: { id: getRandomString() },
-  render: (state, setState) =>
+  render: (args) =>
     eContainer([
       // @ts-ignore
-      center(`Render id: ${state.id}`),
+      center(`Render id: ${args.state.id}`),
       eButton("Refresh", () => {
-        setState({ id: getRandomString() })
+        args.setState({ id: getRandomString() })
         console.log("Set state!")
       }),
       eButton("Force update", () => {
@@ -58,43 +58,41 @@ const rand = defineComponent("rand", {
 
 const counter = defineComponent("counter", {
   state: { count: 0 },
-  render: (state, setState) =>
+  render: (args) =>
     eContainer([
       // @ts-ignore
-      center(`Clicked ${state.count} times`),
+      center(`Clicked ${args.state.count} times`),
       eButton("Click", () => {
         // @ts-ignore
-        setState({ count: state.count + 1 })
+        args.setState({ count: args.state.count + 1 })
       }),
       eButton("Clear", () => {
-        setState({ count: 0 })
+        args.setState({ count: 0 })
       }),
     ]),
 })
 
 const propsTest = defineComponent("propsTest", {
-  render: (_state, _setState, props) => center(`${props.label} prop value: ${props.arg}`),
+  render: (args) => center(`${args.props.label} prop value: ${args.props.arg}`),
 })
 
 const propsTestContainer = defineComponent("propsTestContainer", {
   state: { first: 0, second: 0 },
-  render: (state, setState) =>
+  render: (args) =>
     eContainer([
       // @ts-ignore
-      propsTest({ arg: state.first, label: "First" }),
+      propsTest({ arg: args.state.first, label: "First" }),
       eButton("Increment first", () => {
         // @ts-ignore
-        setState({ ...state, first: state.first + 1 })
+        args.mergeState({ first: args.state.first + 1 })
       }),
       // @ts-ignore
-      propsTest({ arg: state.second, label: "Second" }),
+      propsTest({ arg: args.state.second, label: "Second" }),
       eButton("Increment second", () => {
         // @ts-ignore
-        setState({ ...state, second: state.second + 1 })
+        args.mergeState({ second: args.state.second + 1 })
       }),
     ]),
 })
 
-renderEofol("root", container([h1("Eofol6"), rand(), counter(), propsTestContainer()]))
-
-registerSw()
+mountEofol("root", container([h1("Eofol6"), rand(), counter(), propsTestContainer()]))

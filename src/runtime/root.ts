@@ -1,6 +1,7 @@
 import { arrayCombinator, domClearChildren } from "../util"
 import { getVdom, renderVdom, setVdom } from "../core"
 import { VDOMItem } from "../types"
+import { initEofol } from "./init"
 
 let rootInternal: HTMLElement | null
 
@@ -34,10 +35,11 @@ export const updateEofol = () => {
   }
 }
 
-export const renderEofol = (rootId: string, vdom: VDOMItem) => {
+export const mountEofol = (rootId: string, vdom: VDOMItem) => {
   const root = setRoot(rootId)
   if (root) {
     setVdom(vdom)
     renderEofolInternal()
+    initEofol()
   }
 }

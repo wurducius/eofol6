@@ -1,8 +1,8 @@
-import { State, VDOMItem } from "../types"
+import { Props, State, VDOMItem } from "../types"
 import { getDef, getInstance, setInstance } from "./internal"
 import { updateEofol } from "../runtime"
 import { logEofolError } from "../eofol-util"
-import { arrayCombinator } from "../util"
+import { arrayCombinator, mergeDeep } from "../util"
 
 const renderTagDom = (vdom: VDOMItem) => {
   const element = document.createElement(vdom.tag)
@@ -43,7 +43,18 @@ const renderCustomDom = (vdom: VDOMItem) => {
       updateEofol()
     }
     const props = currentInstance.props
-    const renderedVdom = def.render(state ?? {}, setState, props)
+    const renderedVdom = def.render({
+      initialState: def.state ?? {},
+      state: state ?? {},
+      setState,
+      mergeState: (next: Partial<State>) => {
+        setState(mergeDeep(state ?? {}, next))
+      },
+      resetState: () => {
+        setState({ ...def.state })
+      },
+      props: props as Props,
+    })
     return renderVdom(renderedVdom)
   } else {
     logEofolError(`Def "${vdom.tag}" not found.`)
