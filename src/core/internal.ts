@@ -1,4 +1,4 @@
-import { DefArgs, Instance, Internal, VDOMItem } from "../types"
+import { DefArgs, Instance, Internal, Props, VDOMItem } from "../types"
 import { e } from "./create-element"
 
 const internal: Internal = {
@@ -33,7 +33,7 @@ export const addDef = (defName: string, defArgs: DefArgs) => {
 
 export const defineComponent = (componentName: string, componentArgs: DefArgs) => {
   addDef(componentName, componentArgs)
-  return () => {
-    return e(componentName)
+  return (props?: Props) => {
+    return e(componentName, props)
   }
 }
