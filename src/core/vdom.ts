@@ -35,26 +35,72 @@ const renderCustomDom = (vdom: VDOMItem) => {
       setInstance(vdom.key, nextInstance)
       currentInstance = nextInstance
     }
-    const state = currentInstance.state
+    const state = currentInstance.state ?? {}
     const setState = (nextState: State) => {
       const oldInstance = getInstance(vdom.key)
       const next = { ...oldInstance, state: nextState }
       setInstance(vdom.key, next)
       updateEofol()
     }
+    const mergeState = (next: Partial<State>) => {
+      setState(mergeDeep(state ?? {}, next))
+    }
+    const resetState = () => {
+      setState({ ...def.state })
+    }
     const props = currentInstance.props
     const renderedVdom = def.render({
       initialState: def.state ?? {},
-      state: state ?? {},
+      state,
       setState,
-      mergeState: (next: Partial<State>) => {
-        setState(mergeDeep(state ?? {}, next))
-      },
-      resetState: () => {
-        setState({ ...def.state })
-      },
+      mergeState,
+      resetState,
       props: props as Props,
     })
+    // @TODO move effect invocation somewhere appropriate
+    if (def.effect) {
+      if (Array.isArray(def.effect)) {
+        def.effect.forEach((effectSingle) => {
+          const cleanup = effectSingle({
+            state,
+            setState,
+            mergeState,
+            resetState,
+            props: props as Props,
+            initialState: def.state ?? {},
+          })
+          if (cleanup) {
+            cleanup({
+              state,
+              setState,
+              mergeState,
+              resetState,
+              props: props as Props,
+              initialState: def.state ?? {},
+            })
+          }
+        })
+      } else {
+        const cleanup = def.effect({
+          state,
+          setState,
+          mergeState,
+          resetState,
+          props: props as Props,
+          initialState: def.state ?? {},
+        })
+        if (cleanup) {
+          cleanup({
+            state,
+            setState,
+            mergeState,
+            resetState,
+            props: props as Props,
+            initialState: def.state ?? {},
+          })
+        }
+      }
+    }
     return renderVdom(renderedVdom)
   } else {
     logEofolError(`Def "${vdom.tag}" not found.`)
