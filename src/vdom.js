@@ -1,21 +1,39 @@
-const renderComponentDom = (vdom) => {
+import { getDef } from "./internal"
+import { arrayCombinator } from "./util"
+
+const renderTagDom = (vdom) => {
   const element = document.createElement(vdom.tag)
-
   element.setAttribute("key", vdom.key)
-
   if (vdom.attributes) {
     Object.keys(vdom.attributes).forEach((attributeName) => {
       element.setAttribute(attributeName, vdom.attributes[attributeName])
     })
   }
-
   if (vdom.properties) {
     Object.keys(vdom.properties).forEach((propertyName) => {
       element[propertyName] = vdom.properties[propertyName]
     })
   }
-
   return element
+}
+
+const renderCustomDom = (vdom) => {
+  const def = getDef(vdom.tag)
+  if (def) {
+    const renderedVdom = def.render()
+    const renderedDom = renderVdom(renderedVdom)
+    return renderedDom
+  } else {
+    console.error('Def "' + vdom.tag + '" not found.')
+  }
+}
+
+const renderDom = (vdom) => {
+  if (vdom.type === "custom") {
+    return renderCustomDom(vdom)
+  } else {
+    return renderTagDom(vdom)
+  }
 }
 
 // const mount = () => {}
@@ -35,13 +53,9 @@ export const renderVdom = (vdom) => {
   } else if (typeof vdom === "string") {
     return vdom
   }
-  const rendered = renderComponentDom(vdom)
-  if (vdom.children && Array.isArray(vdom.children) && vdom.children.length > 0) {
-    vdom.children.forEach((child) => {
-      renderVdomImpl(rendered, child)
-    })
-  } else {
-    renderVdomImpl(rendered, vdom.children)
-  }
+  const rendered = renderDom(vdom)
+  arrayCombinator(vdom.children, (child) => {
+    renderVdomImpl(rendered, child)
+  })
   return rendered
 }
