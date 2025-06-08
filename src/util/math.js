@@ -1,13 +1,9 @@
-const generateIdInternal = (length) => () => {
-  let result = ""
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  const charactersLength = characters.length
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
-}
+import { CRYPTO_KEY_ID_LENGTH } from "../constants"
 
-const KEY_ID_LENGTH = 10
+const generateIdInternal = (length) => () =>
+  Array(length)
+    .fill("")
+    .map(() => Math.random().toString(36).charAt(2))
+    .join("")
 
-export const generateId = generateIdInternal(KEY_ID_LENGTH)
+export const generateId = generateIdInternal(CRYPTO_KEY_ID_LENGTH)

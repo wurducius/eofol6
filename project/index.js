@@ -1,0 +1,41 @@
+import { button, container,defineComponent, div, forceUpdateEofol, generateId, h1, renderEofol } from "../src"
+
+
+const eButton = (children, onclick) =>
+  button(
+    children,
+    {
+      onclick,
+    },
+    {
+      style:
+        "height: 40px; padding: 0 16px; background-color: purple; color: darkgrey; border: 2px solid black; cursor: pointer; font-weight: 500;",
+    },
+  )
+
+const rand = defineComponent("rand", {
+  state: { id: generateId() },
+  render: (state, setState) =>
+    div(
+      [
+        div(`Render id: ${state.id}`),
+        eButton("Refresh", () => {
+          setState({ id: generateId() })
+          console.log("Set state!")
+        }),
+      ],
+      { style: "display: flex; flex-direction: column; justify-content: center; gap: 16px; width: 256px;" },
+    ),
+})
+
+renderEofol(
+  "root",
+  container([
+    h1("Eofol6"),
+    rand(),
+    eButton("Force update", () => {
+      forceUpdateEofol()
+      console.log("Force update!")
+    }),
+  ]),
+)
