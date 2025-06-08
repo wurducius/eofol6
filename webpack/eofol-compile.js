@@ -48,11 +48,26 @@ export const processViews = async (compiler, compilation) => {
   })
 }
 
-export const optimizeAssets = async (compiler, compilation) => {
-  Object.keys(compilation.assets).forEach((assetName) => {
+const injectSw = (compilation) =>
+  fs.promises.readFile(path.join(CWD, "resources", "service-worker.js")).then(async (swContent) => {
+    const swAssets = Object.keys(compilation.assets)
+    await fs.promises.readdir(path.join(CWD, "public"), { recursive: true }).then((dir) => {
+      const swFiles = [...swAssets, ...dir.map((item) => item.replaceAll(path.sep, "/"))]
+      const swInject = `"${swFiles.join('", "')}"`
+      const content = swContent.toString().replaceAll('"@@SW_FILES_MARKER@@"', swInject)
+      compilation.assets["service-worker.js"] = getAsset({
+        nextSource: content,
+        nextSize: content.length,
+        nextInfo: {},
+      })
+    })
+  })
+
+const minifyAssets = (compilation) =>
+  Object.keys(compilation.assets).forEach(async (assetName) => {
     if (assetName.endsWith(".html")) {
       const content = compilation.assets[assetName].source()
-      minifyHtml(content).then((minified) => {
+      await minifyHtml(content).then((minified) => {
         compilation.assets[assetName] = getAsset({
           ...compilation.assets[assetName],
           nextSource: minified,
@@ -69,4 +84,8 @@ export const optimizeAssets = async (compiler, compilation) => {
       })
     }
   })
+
+export const optimizeAssets = async (compiler, compilation) => {
+  await injectSw(compilation)
+  minifyAssets(compilation)
 }

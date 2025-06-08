@@ -26,6 +26,7 @@ module.exports.default = (args) => {
     output: {
       filename: "[name].js",
       path: path.join(CWD, buildOptions.distDirname),
+      publicPath: undefined,
     },
     plugins: [new EofolPlugin(), buildOptions.analyze && new BundleAnalyzerPlugin()].filter(Boolean),
     module: {

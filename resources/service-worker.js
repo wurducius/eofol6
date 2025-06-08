@@ -1,6 +1,6 @@
 let CACHE_NAME = "cache",
   CACHE_VERSION = "v1",
-  urlsToCache = ["index.html"]
+  urlsToCache = ["@@SW_FILES_MARKER@@"]
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(`${CACHE_NAME}-${CACHE_VERSION}`).then((e) => e.addAll(urlsToCache)))
 }),

@@ -34,15 +34,17 @@ const copyPublicDir = (source, target) => {
   )
 }
 
-const buildWebpack = (callback) => {
+const buildWebpack = (onSuccess, onError) => {
   return webpack(webpackConfig, (err, stats) => {
     if (err || stats.hasErrors()) {
-      console.log(error(`Webpack error: ${err}`))
+      if (onError) {
+        onError(err)
+      }
     } else {
       console.log(success(`Project built at: ${distPath}`))
-    }
-    if (callback) {
-      callback()
+      if (onSuccess) {
+        onSuccess()
+      }
     }
   })
 }
@@ -72,14 +74,19 @@ const dirSize = async (directory) => {
 
 export const build = () => {
   const start = new Date().valueOf()
-  buildWebpack(() => {
-    touchBuildDirs()
-    copyPublicDir(publicPath, distPath).then(() => {
-      const elapsed = new Date().valueOf() - start
-      dirSize(distPath).then((size) => {
-        console.log(success(`Build size: ${prettySize(size)}`))
-        console.log(success(`Compilation took: ${prettyTime(elapsed)}`))
+  buildWebpack(
+    () => {
+      touchBuildDirs()
+      copyPublicDir(publicPath, distPath).then(() => {
+        const elapsed = new Date().valueOf() - start
+        dirSize(distPath).then((size) => {
+          console.log(success(`Build size: ${prettySize(size)}`))
+          console.log(success(`Compilation took: ${prettyTime(elapsed)}`))
+        })
       })
-    })
-  })
+    },
+    (err) => {
+      console.log(error(`Build failed: ${err}`))
+    },
+  )
 }
