@@ -1,4 +1,4 @@
-import { Attributes, Children, Properties } from "../types"
+import { Attributes, Children, Properties, Props } from "../types"
 import { generateId } from "../util"
 
 export const createElement = (
@@ -9,12 +9,13 @@ export const createElement = (
   type?: string,
 ) => ({
   tag,
-  props: {},
-  children,
+  props: type === "custom" ? attributes : {},
+  children: typeof children === "object" || Array.isArray(children) ? children : children?.toString(),
   attributes,
   properties,
   key: generateId(),
   type,
 })
 
-export const e = (elementName: string) => createElement(elementName, {}, undefined, {}, "custom")
+export const e = (elementName: string, props?: Props) =>
+  createElement(elementName, props ?? {}, undefined, {}, "custom")

@@ -39,6 +39,27 @@ const rand = defineComponent("rand", {
     ),
 })
 
+const counter = defineComponent("counter", {
+  state: { count: 0 },
+  render: (state, setState) =>
+    div(
+      [
+        // @ts-ignore
+        div(`Clicked ${state.count} times`),
+        eButton("Click", () => {
+          // @ts-ignore
+          setState({ count: state.count + 1 })
+        }),
+        eButton("Clear", () => {
+          setState({ count: 0 })
+        }),
+      ],
+      { style: "display: flex; flex-direction: column; justify-content: center; gap: 8px; margin-top: 32px;" },
+    ),
+})
+
+const propsTest = defineComponent("propsTest", { render: (_state, _setState, props) => div(props.arg) })
+
 renderEofol(
   "root",
   container([
@@ -48,6 +69,9 @@ renderEofol(
       forceUpdateEofol()
       console.log("Force update!")
     }),
+    counter(),
+    propsTest({ arg: 1 }),
+    propsTest({ arg: 2 }),
   ]),
 )
 

@@ -26,6 +26,14 @@ export const forceUpdateEofol = () => {
   }
 }
 
+export const updateEofol = () => {
+  const root = getRoot()
+  if (root) {
+    domClearChildren(root)
+    renderEofolInternal()
+  }
+}
+
 export const renderEofol = (rootId: string, vdom: VDOMItem) => {
   const root = setRoot(rootId)
   if (root) {
