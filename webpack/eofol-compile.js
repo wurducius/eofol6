@@ -1,7 +1,7 @@
 import path from "path"
 import fs from "node:fs"
-
-export const eofolCompile = async (compiler, compilation) => {}
+import minifyHtml from "./compile/minify-html.js"
+import minifyJs from "./compile/minify-js.js"
 
 const getAsset = ({ asset, nextSource, nextSize, nextInfo }) => {
   const map = asset ? asset.map() : null
@@ -59,5 +59,28 @@ export const processViews = async (compiler, compilation) => {
     nextSource,
     nextInfo: { optimized: false },
     nextSize: nextSource.length,
+  })
+}
+
+export const optimizeAssets = async (compiler, compilation) => {
+  Object.keys(compilation.assets).forEach((assetName) => {
+    if (assetName.endsWith(".html")) {
+      const content = compilation.assets[assetName].source()
+      minifyHtml(content).then((minified) => {
+        compilation.assets[assetName] = getAsset({
+          ...compilation.assets[assetName],
+          nextSource: minified,
+          nextSize: minified.length,
+        })
+      })
+    } else if (assetName.endsWith(".js")) {
+      const content = compilation.assets[assetName].source()
+      const minified = minifyJs(content)
+      compilation.assets[assetName] = getAsset({
+        ...compilation.assets[assetName],
+        nextSource: minified,
+        nextSize: minified.length,
+      })
+    }
   })
 }

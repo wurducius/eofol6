@@ -23,10 +23,16 @@
   "description": "All inclusive web framework with zero configuration, batteries included!",
   "type": "module",
   "dependencies": {
+    "acorn-jsx": "5.3.2",
+    "esast-util-from-js": "2.0.1",
+    "estree-util-build-jsx": "3.0.1",
+    "estree-util-to-js": "2.0.0",
+    "html-minifier-terser": "^7.2.0",
     "http-server": "14.1.1",
     "rimraf": "6.0.1",
     "ts-loader": "9.5.2",
     "typescript": "5.7.3",
+    "uglify-js": "^3.19.3",
     "webpack": "5.99.9",
     "webpack-bundle-analyzer": "4.10.2",
     "webpack-dev-server": "5.2.2"

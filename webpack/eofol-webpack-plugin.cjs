@@ -1,4 +1,4 @@
-const { eofolCompile, processViews } = require("./eofol-compile")
+const { optimizeAssets, processViews } = require("./eofol-compile")
 
 const PLUGIN_NAME = "Eofol6 webpack plugin"
 
@@ -25,7 +25,7 @@ const onCompilationFinished = (compiler) => (compilation) => {
       //   stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
       additionalAssets: true,
     },
-    (compiler) => eofolCompile(compiler, compilation),
+    (compiler) => optimizeAssets(compiler, compilation),
   )
 }
 
