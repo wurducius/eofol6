@@ -9,7 +9,7 @@ export const container = (children: Children) =>
   createElement(
     "div",
     {
-      style: "display: flex; flex-direction: column; align-items: center; padding: 36px 36px;",
+      class: "col container",
     },
     children,
   )

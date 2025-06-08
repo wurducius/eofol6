@@ -9,3 +9,28 @@
 body {
   font-family: Roboto, sans-serif;
 }
+
+.e-container {
+  gap: 8px;
+  width: 256px;
+}
+
+.e-button {
+  height: 40px;
+  padding: 0 16px;
+  background-color: darkmagenta;
+  color: lightgrey;
+  border: 2px solid black;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+}
+
+.e-button:hover {
+  background-color: #740c74;
+  color: darkgrey;
+  border: 2px solid darkmagenta;
+  font-weight: 500;
+  font-size: 14px;
+}
