@@ -31,7 +31,7 @@ const compileViewJsx = async (view) => {
   }
   const content = await source
   const result = injectImportPragma(compileJsx(content.toString()))
-  console.log("WRITE TO " + viewPath, "CONTENT: " + result)
+  console.log(`WRITE TO ${viewPath}`, `CONTENT: ${result}`)
   // return promises.writeFile(viewPath, result)
 }
 
