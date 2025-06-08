@@ -1,7 +1,9 @@
 import fs from "node:fs"
 import path from "path"
 import webpack from "webpack"
-import webpackConfig from "../../webpack/webpack.config.js"
+import getWebpackConfig from "../../webpack/webpack.config.js"
+
+const webpackConfig = getWebpackConfig()
 
 const CWD = process.cwd()
 

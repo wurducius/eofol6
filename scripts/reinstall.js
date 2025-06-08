@@ -1,8 +1,9 @@
-const { argv } = require("node:process")
 const { execSync, spawn } = require("child_process")
 const { rmSync, existsSync } = require("node:fs")
 const { join } = require("node:path")
 const { spawnOptions } = require("./impl/spawn")
+
+const argv = process.argv
 
 let argForce = false
 if (argv.length >= 2) {
