@@ -4,15 +4,17 @@ import { generateId } from "./util"
 import { defineComponent } from "./internal"
 
 const rand = defineComponent("rand", {
-  render: () =>
+  state: { id: generateId() },
+  render: (state, setState) =>
     div(
       [
-        div(`Render id: ${generateId()}`),
+        div(`Render id: ${state.id}`),
         button(
           "Refresh",
           {
             onclick: () => {
-              forceUpdateEofol()
+              // forceUpdateEofol()
+              setState({ id: generateId() })
               console.log("Force update!")
             },
           },

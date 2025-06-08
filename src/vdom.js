@@ -1,6 +1,7 @@
-import { getDef } from "./internal"
+import { getDef, getInstance, setInstance } from "./internal"
 import { arrayCombinator } from "./util"
 import { logEofolError } from "./log"
+import { forceUpdateEofol } from "./root"
 
 const renderTagDom = (vdom) => {
   const element = document.createElement(vdom.tag)
@@ -21,7 +22,23 @@ const renderTagDom = (vdom) => {
 const renderCustomDom = (vdom) => {
   const def = getDef(vdom.tag)
   if (def) {
-    const renderedVdom = def.render()
+    const instance = getInstance(vdom.key)
+    let state
+    if (instance) {
+      state = instance.state
+    } else {
+      const initialState = { ...def.state }
+      const nextInstance = { state: initialState }
+      setInstance(vdom.key, nextInstance)
+      state = initialState
+    }
+    const setState = (nextState) => {
+      const oldInstance = getInstance(vdom.key)
+      const next = { ...oldInstance, state: nextState }
+      setInstance(vdom.key, next)
+      forceUpdateEofol()
+    }
+    const renderedVdom = def.render(state, setState)
     return renderVdom(renderedVdom)
   } else {
     logEofolError('Def "' + vdom.tag + '" not found.')
