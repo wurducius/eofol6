@@ -1,5 +1,5 @@
-import { createElement } from "./create-element"
-import { Attributes, Children, Properties } from "./types"
+import { Attributes, Children, Properties } from "../types"
+import { createElement } from "../core"
 
 export const div = (children: Children, attributes?: Attributes) => createElement("div", attributes, children)
 

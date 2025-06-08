@@ -1,8 +1,8 @@
+import { State, VDOMItem } from "../types"
 import { getDef, getInstance, setInstance } from "./internal"
-import { arrayCombinator } from "./util"
-import { logEofolError } from "./log"
-import { forceUpdateEofol } from "./root"
-import { State, VDOMItem } from "./types"
+import { forceUpdateEofol } from "../runtime"
+import { logEofolError } from "../eofol-util"
+import { arrayCombinator } from "../util"
 
 const renderTagDom = (vdom: VDOMItem) => {
   const element = document.createElement(vdom.tag)

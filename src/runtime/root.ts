@@ -1,7 +1,6 @@
-import { renderVdom } from "./vdom"
-import { arrayCombinator, domClearChildren } from "./util"
-import { getVdom, setVdom } from "./internal"
-import { VDOMItem } from "./types"
+import { arrayCombinator, domClearChildren } from "../util"
+import { getVdom, renderVdom, setVdom } from "../core"
+import { VDOMItem } from "../types"
 
 let rootInternal: HTMLElement | null
 

@@ -1,5 +1,5 @@
-import { generateId } from "./util"
-import { Attributes, Children, Properties } from "./types"
+import { Attributes, Children, Properties } from "../types"
+import { generateId } from "../util"
 
 export const createElement = (
   tag: string,

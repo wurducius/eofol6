@@ -1,5 +1,5 @@
+import { DefArgs, Instance, Internal, VDOMItem } from "../types"
 import { e } from "./create-element"
-import { DefArgs, Instance, Internal, VDOMItem } from "./types"
 
 const internal: Internal = {
   instances: {},
