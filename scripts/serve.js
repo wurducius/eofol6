@@ -1,4 +1,5 @@
 import { execSync } from "child_process"
+import { primary } from "./impl/util.js"
 
 const serveOptions = {
   open: true,
@@ -6,6 +7,6 @@ const serveOptions = {
   root: "./dist",
 }
 
-console.log("Eofol6 serve")
+console.log(primary("Eofol6 serve"))
 
 execSync(`npx http-server ${serveOptions.root} -p ${serveOptions.port}${serveOptions.open ? " -o" : ""}`)

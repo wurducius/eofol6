@@ -1,14 +1,14 @@
 import { execSync } from "child_process"
 import { join } from "path"
-import { spawnOptions } from "./impl/spawn.js"
+import { error, primary, spawnOptions, success } from "./impl/util.js"
 
-console.log("Eofol6 deploy")
-console.log("Deploying project...")
+console.log(primary("Eofol6 deploy"))
+console.log(primary("Deploying project..."))
 
 const resultCode = execSync(join(process.cwd(), "scripts", "impl", "deploy.bat"), spawnOptions)
 
 if (!resultCode) {
-  console.log("Successfully deployed project.")
+  console.log(success("Successfully deployed project."))
 } else {
-  console.log("Deployment of project failed.")
+  console.log(error("Deployment of project failed."))
 }

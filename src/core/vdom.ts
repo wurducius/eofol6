@@ -1,8 +1,8 @@
-import { State, VDOMItem } from "../types"
+import { Props, State, VDOMItem } from "../types"
 import { getDef, getInstance, setInstance } from "./internal"
-import { forceUpdateEofol } from "../runtime"
+import { updateEofol } from "../runtime"
 import { logEofolError } from "../eofol-util"
-import { arrayCombinator } from "../util"
+import { arrayCombinator, mergeDeep } from "../util"
 
 const renderTagDom = (vdom: VDOMItem) => {
   const element = document.createElement(vdom.tag)
@@ -25,23 +25,82 @@ const renderTagDom = (vdom: VDOMItem) => {
 const renderCustomDom = (vdom: VDOMItem) => {
   const def = getDef(vdom.tag)
   if (def) {
-    const instance = getInstance(vdom.key)
-    let state
-    if (instance) {
-      state = instance.state
+    const oldInstance = getInstance(vdom.key)
+    let currentInstance
+    if (oldInstance) {
+      currentInstance = oldInstance
     } else {
       const initialState = { ...def.state }
-      const nextInstance = { state: initialState }
+      const nextInstance = { state: initialState, props: vdom.attributes }
       setInstance(vdom.key, nextInstance)
-      state = initialState
+      currentInstance = nextInstance
     }
+    const state = currentInstance.state ?? {}
     const setState = (nextState: State) => {
       const oldInstance = getInstance(vdom.key)
       const next = { ...oldInstance, state: nextState }
       setInstance(vdom.key, next)
-      forceUpdateEofol()
+      updateEofol()
     }
-    const renderedVdom = def.render(state ?? {}, setState)
+    const mergeState = (next: Partial<State>) => {
+      setState(mergeDeep(state ?? {}, next))
+    }
+    const resetState = () => {
+      setState({ ...def.state })
+    }
+    const props = currentInstance.props
+    const renderedVdom = def.render({
+      initialState: def.state ?? {},
+      state,
+      setState,
+      mergeState,
+      resetState,
+      props: props as Props,
+    })
+    // @TODO move effect invocation somewhere appropriate
+    if (def.effect) {
+      if (Array.isArray(def.effect)) {
+        def.effect.forEach((effectSingle) => {
+          const cleanup = effectSingle({
+            state,
+            setState,
+            mergeState,
+            resetState,
+            props: props as Props,
+            initialState: def.state ?? {},
+          })
+          if (cleanup) {
+            cleanup({
+              state,
+              setState,
+              mergeState,
+              resetState,
+              props: props as Props,
+              initialState: def.state ?? {},
+            })
+          }
+        })
+      } else {
+        const cleanup = def.effect({
+          state,
+          setState,
+          mergeState,
+          resetState,
+          props: props as Props,
+          initialState: def.state ?? {},
+        })
+        if (cleanup) {
+          cleanup({
+            state,
+            setState,
+            mergeState,
+            resetState,
+            props: props as Props,
+            initialState: def.state ?? {},
+          })
+        }
+      }
+    }
     return renderVdom(renderedVdom)
   } else {
     logEofolError(`Def "${vdom.tag}" not found.`)
