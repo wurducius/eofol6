@@ -1,6 +1,7 @@
 const path = require("path")
 const BundleAnalyzerPluginImport = require("webpack-bundle-analyzer")
 const EofolPluginImport = require("./eofol-webpack-plugin.cjs")
+const Dotenv = require("dotenv-webpack")
 
 const EofolPlugin = EofolPluginImport.default
 const BundleAnalyzerPlugin = BundleAnalyzerPluginImport.BundleAnalyzerPlugin
@@ -28,7 +29,7 @@ module.exports.default = (args) => {
       path: path.join(CWD, buildOptions.distDirname),
       publicPath: undefined,
     },
-    plugins: [new EofolPlugin(), buildOptions.analyze && new BundleAnalyzerPlugin()].filter(Boolean),
+    plugins: [new EofolPlugin(), buildOptions.analyze && new BundleAnalyzerPlugin(), new Dotenv()].filter(Boolean),
     module: {
       rules: [
         {

@@ -1,9 +1,9 @@
 import { registerSw } from "./sw"
 
 const RUNTIME_CONFIG = {
-  SERVICE_WORKER_ENABLED: true,
-  SERVICE_WORKER_PATH: "service-worker.js",
-  VERBOSE: true,
+  SERVICE_WORKER_ENABLED: process.env.SERVICE_WORKER_ENABLED === "true",
+  SERVICE_WORKER_PATH: process.env.SERVICE_WORKER_PATH ?? "service-worker.js",
+  VERBOSE: process.env.VERBOSE === "true",
 }
 
 export const initEofol = () => {

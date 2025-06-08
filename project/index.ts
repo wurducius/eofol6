@@ -3,6 +3,7 @@ import {
   button,
   Children,
   container,
+  createElement,
   cx,
   defineComponent,
   div,
@@ -21,7 +22,7 @@ const getRandomString = getRandomStringImpl(17)
 
 const col = (children?: Children, attributes?: Attributes) =>
   div(children, { ...(attributes ?? {}), class: cx("col center", attributes?.class) })
-// eslint-disable-next-line no-unused-vars
+
 const row = (children?: Children, attributes?: Attributes) =>
   div(children, { ...(attributes ?? {}), class: cx("row", attributes?.class) })
 const center = (children?: Children, attributes?: Attributes) =>
@@ -124,4 +125,56 @@ const air = defineComponent("air", {
   ],
 })
 
-mountEofol("root", container([h1("Eofol6"), rand(), counter(), propsTestContainer(), air()]))
+const td = defineComponent("td", {
+  state: { items: [] },
+  render: (args) =>
+    eContainer([
+      createElement("h3", {}, "To do"),
+      eContainer(
+        // @ts-ignore
+        args.state.items.map((item) =>
+          row(
+            [
+              div(item.title),
+              eButton("X", () => {
+                // @ts-ignore
+                args.setState({ items: args.state.items.filter((x) => x.id !== item.id) })
+              }),
+            ],
+            { class: "center" },
+          ),
+        ),
+      ),
+      createElement("input", { id: "td-input", value: "" }, undefined, {
+        // @ts-ignore
+        onkeypress: (event) => {
+          if (event.key === "Enter") {
+            const inputElement = document.getElementById("td-input")
+            if (inputElement) {
+              // @ts-ignore
+              const value = inputElement.value
+              if (value) {
+                // @ts-ignore
+                args.setState({ items: [...args.state.items, { id: getRandomString(), title: value }] })
+                inputElement.setAttribute("value", "")
+              }
+            }
+          }
+        },
+      }),
+      eButton("Add", () => {
+        const inputElement = document.getElementById("td-input")
+        if (inputElement) {
+          // @ts-ignore
+          const value = inputElement.value
+          if (value) {
+            // @ts-ignore
+            args.setState({ items: [...args.state.items, { id: getRandomString(), title: value }] })
+            inputElement.setAttribute("value", "")
+          }
+        }
+      }),
+    ]),
+})
+
+mountEofol("root", container([h1("Eofol6"), rand(), counter(), propsTestContainer(), air(), td()]))
