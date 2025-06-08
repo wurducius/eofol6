@@ -10,7 +10,7 @@ export const createElement = (tag, attributes, children, properties, type) => ({
   type,
 })
 
-export const div = (children) => createElement("div", undefined, children)
+export const div = (children, attributes) => createElement("div", attributes, children)
 
 export const h1 = (children) => createElement("h1", undefined, children)
 
@@ -23,6 +23,6 @@ export const container = (children) =>
     children,
   )
 
-export const button = (children, properties) => createElement("button", undefined, children, properties)
+export const button = (children, properties, attributes) => createElement("button", attributes, children, properties)
 
 export const e = (elementName) => createElement(elementName, {}, undefined, {}, "custom")

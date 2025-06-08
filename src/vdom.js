@@ -1,5 +1,6 @@
 import { getDef } from "./internal"
 import { arrayCombinator } from "./util"
+import { logEofolError } from "./log"
 
 const renderTagDom = (vdom) => {
   const element = document.createElement(vdom.tag)
@@ -21,10 +22,9 @@ const renderCustomDom = (vdom) => {
   const def = getDef(vdom.tag)
   if (def) {
     const renderedVdom = def.render()
-    const renderedDom = renderVdom(renderedVdom)
-    return renderedDom
+    return renderVdom(renderedVdom)
   } else {
-    console.error('Def "' + vdom.tag + '" not found.')
+    logEofolError('Def "' + vdom.tag + '" not found.')
   }
 }
 
