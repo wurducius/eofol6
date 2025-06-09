@@ -36,43 +36,52 @@ body {
 }
 
 .snackbar {
-  visibility: hidden;
   min-width: 250px;
-  margin-left: -125px;
-  background-color: #333;
-  color: #fff;
+  padding: 16px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: center;
-  border-radius: 2px;
-  padding: 16px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 0;
+}
+
+#snackbar-container {
   position: fixed;
-  z-index: 1;
   left: 50%;
-  bottom: 30px;
-  font-size: 17px;
+  transform: translateX(-50%);
+  bottom: 16px;
+  width: max-content;
+  max-width: 100%;
+  z-index: 1;
 }
 
-.snackbar.show {
-  visibility: visible;
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+#snackbar-container > :not(:last-child) {
+  margin-bottom: 0.75rem;
 }
 
-@-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+.snackbar-danger {
+  background-color: darkred;
+  color: darkgrey;
+  border: 1px solid red;
 }
 
-@keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+.snackbar-warning {
+  background-color: yellow;
+  color: dimgrey;
+  border: 1px solid sandybrown;
 }
 
-@-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+.snackbar-success {
+  background-color: darkgreen;
+  color: darkgrey;
+  border: 2px solid green;
 }
 
-@keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+.snackbar-info {
+  background-color: indigo;
+  color: darkgrey;
+  border: 1px solid darkslateblue;
 }

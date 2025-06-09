@@ -1,41 +1,21 @@
 import {
-  Attributes,
-  button,
   center,
-  Children,
   col,
   container,
   defineComponent,
   div,
   forceUpdateEofol,
-  generateId,
   h1,
   h2,
   input,
   mountEofol,
+  p,
   row,
 } from "../src"
-
-const getRandomStringImpl = (length: number) => () =>
-  Array(length)
-    .fill("")
-    .map(() => Math.random().toString(36).charAt(2))
-    .join("")
-
-const getRandomString = getRandomStringImpl(17)
-
-const eContainer = (children?: Children) => col(children, { class: "e-container" })
-const eButton = (children: Children, onclick: () => void, attributes?: Attributes) =>
-  button(
-    children,
-    {
-      onclick,
-    },
-    {
-      class: "e-button",
-      ...(attributes ?? {}),
-    },
-  )
+import { getRandomString } from "./util"
+import { eButton, eContainer } from "./e-ui"
+import { notifyError } from "./notification"
+import { sx } from "eofol-sx"
 
 const rand = defineComponent("rand", {
   state: { id: getRandomString() },
@@ -124,20 +104,6 @@ const air = defineComponent("air", {
 
 const ID_INPUT_TD_TITLE = "td-input"
 
-const NOTIFICATION_DURATION_MS = 3000
-
-const notify = (msg: string) => {
-  const notificationRoot = document.createElement("div")
-  notificationRoot.innerHTML = msg
-  const nextId = `snackbar-${generateId()}`
-  notificationRoot.setAttribute("id", nextId)
-  notificationRoot.setAttribute("class", "snackbar show")
-  document.body.appendChild(notificationRoot)
-  setTimeout(() => {
-    document.body.removeChild(notificationRoot)
-  }, NOTIFICATION_DURATION_MS)
-}
-
 const td = defineComponent("td", {
   state: { items: [] },
   render: (args) =>
@@ -188,11 +154,42 @@ const td = defineComponent("td", {
             args.setState({ items: [...args.state.items, { id: getRandomString(), title: value }] })
             inputElement.setAttribute("value", "")
           } else {
-            notify("Cannot add To do item: title is empty.")
+            notifyError("Cannot add To do item: title is empty.")
           }
         }
       }),
     ]),
 })
 
-mountEofol("root", container([h1("Eofol6"), rand(), counter(), propsTestContainer(), air(), td()]))
+const childrenTestSecond = defineComponent("childrenTestSecond", {
+  render: (args) => div(`Value = ${args.props.value}`),
+})
+const childrenTestFirst = defineComponent("childrenTestFirst", {
+  render: (args) => div(childrenTestSecond({ value: args.props.value })),
+})
+const childrenTestRoot = defineComponent("childrenTestRoot", {
+  state: { value: 0 },
+  render: (args) =>
+    div([
+      // @ts-ignore
+      childrenTestFirst({ value: args.state.value }),
+      eButton("+", () => {
+        // @ts-ignore
+        args.setState({ value: args.state.value + 1 })
+      }),
+    ]),
+})
+
+mountEofol(
+  "root",
+  container([
+    h1("Eofol6"),
+    rand(),
+    counter(),
+    propsTestContainer(),
+    air(),
+    td(),
+    p("Sx test", { class: sx({ color: "cyan" }) }),
+    childrenTestRoot(),
+  ]),
+)
