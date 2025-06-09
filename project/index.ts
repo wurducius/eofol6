@@ -129,7 +129,7 @@ const td = defineComponent("td", {
   state: { items: [] },
   render: (args) =>
     eContainer([
-      createElement("h3", {}, "To do"),
+      createElement("h2", {}, "To do"),
       eContainer(
         // @ts-ignore
         args.state.items.map((item) =>
@@ -145,7 +145,7 @@ const td = defineComponent("td", {
           ),
         ),
       ),
-      createElement("input", { id: "td-input", value: "" }, undefined, {
+      createElement("input", { id: "td-input", value: "", placeholder: "Title" }, undefined, {
         // @ts-ignore
         onkeypress: (event) => {
           if (event.key === "Enter") {
