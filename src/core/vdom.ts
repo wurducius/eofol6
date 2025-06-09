@@ -1,8 +1,8 @@
-import { Props, State, VDOMItem } from "../types"
-import { getDef, getInstance, setInstance } from "./internal"
-import { updateEofol } from "../runtime"
+import { VDOMItem } from "../types"
+import { getDef } from "./internal"
 import { logEofolError } from "../eofol-util"
-import { arrayCombinator, mergeDeep } from "../util"
+import { arrayCombinator } from "../util"
+import { getArgs, Lifecycle } from "./lifecycle"
 
 const renderTagDom = (vdom: VDOMItem) => {
   const element = document.createElement(vdom.tag)
@@ -25,89 +25,24 @@ const renderTagDom = (vdom: VDOMItem) => {
 const renderCustomDom = (vdom: VDOMItem) => {
   const def = getDef(vdom.tag)
   if (def) {
-    const oldInstance = getInstance(vdom.key)
-    let currentInstance
-    if (oldInstance) {
-      currentInstance = oldInstance
+    const args = getArgs({ vdom, def })
+    const lifecycleArgs = { def, args }
+    if (Lifecycle.shouldRender(lifecycleArgs)) {
+      return renderVdomToDom(Lifecycle.render(lifecycleArgs))
     } else {
-      const initialState = { ...def.state }
-      const nextInstance = { state: initialState, props: vdom.attributes }
-      setInstance(vdom.key, nextInstance)
-      currentInstance = nextInstance
+      return vdom
     }
-    const state = currentInstance.state ?? {}
-    const setState = (nextState: State) => {
-      const oldInstance = getInstance(vdom.key)
-      const next = { ...oldInstance, state: nextState }
-      setInstance(vdom.key, next)
-      updateEofol()
-    }
-    const mergeState = (next: Partial<State>) => {
-      setState(mergeDeep(state ?? {}, next))
-    }
-    const resetState = () => {
-      setState({ ...def.state })
-    }
-    const props = currentInstance.props
-    const renderedVdom = def.render({
-      initialState: def.state ?? {},
-      state,
-      setState,
-      mergeState,
-      resetState,
-      props: props as Props,
-    })
-    // @TODO move effect invocation somewhere appropriate
-    if (def.effect) {
-      if (Array.isArray(def.effect)) {
-        def.effect.forEach((effectSingle) => {
-          const cleanup = effectSingle({
-            state,
-            setState,
-            mergeState,
-            resetState,
-            props: props as Props,
-            initialState: def.state ?? {},
-          })
-          if (cleanup) {
-            cleanup({
-              state,
-              setState,
-              mergeState,
-              resetState,
-              props: props as Props,
-              initialState: def.state ?? {},
-            })
-          }
-        })
-      } else {
-        const cleanup = def.effect({
-          state,
-          setState,
-          mergeState,
-          resetState,
-          props: props as Props,
-          initialState: def.state ?? {},
-        })
-        if (cleanup) {
-          cleanup({
-            state,
-            setState,
-            mergeState,
-            resetState,
-            props: props as Props,
-            initialState: def.state ?? {},
-          })
-        }
-      }
-    }
-    return renderVdom(renderedVdom)
   } else {
     logEofolError(`Def "${vdom.tag}" not found.`)
   }
 }
 
 const renderDom = (vdom: VDOMItem) => {
+  if (vdom === undefined) {
+    return ""
+  } else if (typeof vdom === "string") {
+    return vdom
+  }
   if (vdom.type === "custom") {
     return renderCustomDom(vdom)
   } else {
@@ -115,24 +50,33 @@ const renderDom = (vdom: VDOMItem) => {
   }
 }
 
-const renderVdomImpl = (rendered: HTMLElement, vdom: VDOMItem) => {
-  const renderedChild = renderVdom(vdom)
+const renderChild = (rendered: HTMLElement, vdom: VDOMItem) => {
+  const renderedChild = renderVdomToDom(vdom)
   if (typeof renderedChild === "string") {
     rendered.innerHTML = renderedChild
-  } else {
+  } else if (renderedChild !== undefined) {
     rendered.appendChild(renderedChild)
   }
 }
 
-export const renderVdom = (vdom: VDOMItem) => {
-  if (vdom === undefined) {
-    return ""
-  } else if (typeof vdom === "string") {
-    return vdom
-  }
-  const rendered = renderDom(vdom)
+export const updateDomChildren = (result, vdom: VDOMItem) => {
   arrayCombinator(vdom.children, (child) => {
-    renderVdomImpl(rendered, child)
+    if (child) {
+      renderChild(result, child)
+    }
+    if (typeof child !== "string" && child && child?.type === "custom") {
+      const def = getDef(child.tag)
+      if (def) {
+        const args = getArgs({ vdom: child, def })
+        Lifecycle.afterRender({ def, args })
+      }
+    }
   })
-  return rendered
+  return result
+}
+
+export const renderVdomToDom = (vdom: VDOMItem) => {
+  const result = renderDom(vdom)
+  updateDomChildren(result, vdom)
+  return result
 }

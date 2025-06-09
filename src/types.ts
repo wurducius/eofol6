@@ -35,25 +35,28 @@ export type EffectArgs = {
 // eslint-disable-next-line no-unused-vars
 export type Effect = ((args: EffectArgs) => (args: EffectArgs) => void) | ((args: EffectArgs) => void)
 
+export type Args = {
+  state: State
+  // eslint-disable-next-line no-unused-vars
+  setState: (_next: State) => void
+  // eslint-disable-next-line no-unused-vars
+  mergeState: (_next: Partial<State>) => void
+  resetState: () => void
+  initialState: State
+  props: Props
+}
+
 export type DefArgs = {
   // eslint-disable-next-line no-unused-vars
-  render: (args: {
-    state: State
-    // eslint-disable-next-line no-unused-vars
-    setState: (_next: State) => void
-    // eslint-disable-next-line no-unused-vars
-    mergeState: (_next: Partial<State>) => void
-    resetState: () => void
-    initialState: State
-    props: Props
-  }) => EofolNode
+  render: (args: Args) => EofolNode
   state?: State
   // eslint-disable-next-line no-unused-vars
   shouldUpdate?: (args: { state: State; props: Props }) => boolean
   subscribe?: string[] | string
   defaultProps?: Props
   effect?: Effect | Effect[]
-  memo?: boolean
 }
 
 export type Internal = { instances: Record<string, Instance>; vdom: VDOMItem; defs: Record<string, DefArgs> }
+
+export type LifecycleArgs = { args: Args; def: DefArgs }
