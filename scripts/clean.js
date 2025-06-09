@@ -1,6 +1,6 @@
 import { rimraf } from "rimraf"
 import { join } from "path"
-import { error, primary, success } from "./impl/util.js"
+import { error, logEofolScript, success } from "./impl/util.js"
 
 const CWD = process.cwd()
 
@@ -8,7 +8,7 @@ const clean = () => {
   rimraf.rimrafSync(join(CWD, "dist"))
 }
 
-console.log(primary("Eofol6 clean"))
+logEofolScript("clean")
 
 try {
   clean()

@@ -1,7 +1,7 @@
 import Webpack from "webpack"
 import WebpackDevServer from "webpack-dev-server"
 import getWebpackConfigImport from "../webpack/webpack.config.cjs"
-import { primary } from "./impl/util.js"
+import { logEofolScript, primary } from "./impl/util.js"
 
 const getWebpackConfig = getWebpackConfigImport.default
 
@@ -28,7 +28,7 @@ const runServer = async () => {
   await server.start()
 }
 
-console.log(primary("Eofol6 start"))
+logEofolScript("start")
 console.log(primary("Starting server..."))
 console.clear()
 

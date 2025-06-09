@@ -8,6 +8,7 @@ import {
   defineComponent,
   div,
   forceUpdateEofol,
+  generateId,
   h1,
   h2,
   input,
@@ -123,6 +124,20 @@ const air = defineComponent("air", {
 
 const ID_INPUT_TD_TITLE = "td-input"
 
+const NOTIFICATION_DURATION_MS = 3000
+
+const notify = (msg: string) => {
+  const notificationRoot = document.createElement("div")
+  notificationRoot.innerHTML = msg
+  const nextId = `snackbar-${generateId()}`
+  notificationRoot.setAttribute("id", nextId)
+  notificationRoot.setAttribute("class", "snackbar show")
+  document.body.appendChild(notificationRoot)
+  setTimeout(() => {
+    document.body.removeChild(notificationRoot)
+  }, NOTIFICATION_DURATION_MS)
+}
+
 const td = defineComponent("td", {
   state: { items: [] },
   render: (args) =>
@@ -173,7 +188,7 @@ const td = defineComponent("td", {
             args.setState({ items: [...args.state.items, { id: getRandomString(), title: value }] })
             inputElement.setAttribute("value", "")
           } else {
-            alert("Cannot add to do item: title is empty.")
+            notify("Cannot add To do item: title is empty.")
           }
         }
       }),

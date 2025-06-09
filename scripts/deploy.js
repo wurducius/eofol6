@@ -1,8 +1,8 @@
 import { execSync } from "child_process"
 import { join } from "path"
-import { error, primary, spawnOptions, success } from "./impl/util.js"
+import { error, logEofolScript, primary, spawnOptions, success } from "./impl/util.js"
 
-console.log(primary("Eofol6 deploy"))
+logEofolScript("deploy")
 console.log(primary("Deploying project..."))
 
 const resultCode = execSync(join(process.cwd(), "scripts", "impl", "deploy.bat"), spawnOptions)

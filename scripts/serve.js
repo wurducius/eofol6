@@ -1,5 +1,5 @@
 import { execSync } from "child_process"
-import { primary } from "./impl/util.js"
+import { logEofolScript } from "./impl/util.js"
 
 const serveOptions = {
   open: true,
@@ -7,6 +7,6 @@ const serveOptions = {
   root: "./dist",
 }
 
-console.log(primary("Eofol6 serve"))
+logEofolScript("serve")
 
 execSync(`npx http-server ${serveOptions.root} -p ${serveOptions.port}${serveOptions.open ? " -o" : ""}`)

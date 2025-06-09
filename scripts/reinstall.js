@@ -1,7 +1,7 @@
 import { execSync, spawn } from "child_process"
 import { rmSync, existsSync } from "node:fs"
 import { join } from "node:path"
-import { error, primary, spawnOptions, success } from "./impl/util.js"
+import { error, logEofolScript, spawnOptions, success } from "./impl/util.js"
 
 const argv = process.argv
 
@@ -23,7 +23,7 @@ const nodeModulesPath = join(CWD, "node_modules")
 
 const steps = argForce ? 4 : 3
 
-console.log(primary("Eofol6 reinstall"))
+logEofolScript("reinstall")
 
 if (existsSync(packageLockPath)) {
   rmSync(packageLockPath)

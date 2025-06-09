@@ -25,7 +25,7 @@ module.exports.default = (args) => {
     mode: buildOptions.mode,
     entry: `${buildOptions.projectPath}/${buildOptions.entryFilename}`,
     output: {
-      filename: "[name].js",
+      filename: "assets/js/[name].js",
       path: path.join(CWD, buildOptions.distDirname),
       publicPath: undefined,
     },
