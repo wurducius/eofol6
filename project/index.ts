@@ -1,15 +1,18 @@
 import {
   Attributes,
   button,
+  center,
   Children,
+  col,
   container,
-  createElement,
-  cx,
   defineComponent,
   div,
   forceUpdateEofol,
   h1,
+  h2,
+  input,
   mountEofol,
+  row,
 } from "../src"
 
 const getRandomStringImpl = (length: number) => () =>
@@ -20,16 +23,8 @@ const getRandomStringImpl = (length: number) => () =>
 
 const getRandomString = getRandomStringImpl(17)
 
-const col = (children?: Children, attributes?: Attributes) =>
-  div(children, { ...(attributes ?? {}), class: cx("col center", attributes?.class) })
-
-const row = (children?: Children, attributes?: Attributes) =>
-  div(children, { ...(attributes ?? {}), class: cx("row", attributes?.class) })
-const center = (children?: Children, attributes?: Attributes) =>
-  div(children, { ...(attributes ?? {}), class: cx("center", attributes?.class) })
-
 const eContainer = (children?: Children) => col(children, { class: "e-container" })
-const eButton = (children: Children, onclick: () => void) =>
+const eButton = (children: Children, onclick: () => void, attributes?: Attributes) =>
   button(
     children,
     {
@@ -37,6 +32,7 @@ const eButton = (children: Children, onclick: () => void) =>
     },
     {
       class: "e-button",
+      ...(attributes ?? {}),
     },
   )
 
@@ -125,11 +121,13 @@ const air = defineComponent("air", {
   ],
 })
 
+const ID_INPUT_TD_TITLE = "td-input"
+
 const td = defineComponent("td", {
   state: { items: [] },
   render: (args) =>
     eContainer([
-      createElement("h2", {}, "To do"),
+      h2("To do"),
       eContainer(
         // @ts-ignore
         args.state.items.map((item) =>
@@ -145,25 +143,28 @@ const td = defineComponent("td", {
           ),
         ),
       ),
-      createElement("input", { id: "td-input", value: "", placeholder: "Title" }, undefined, {
-        // @ts-ignore
-        onkeypress: (event) => {
-          if (event.key === "Enter") {
-            const inputElement = document.getElementById("td-input")
-            if (inputElement) {
-              // @ts-ignore
-              const value = inputElement.value
-              if (value) {
+      input(
+        {
+          // @ts-ignore
+          onkeypress: (event) => {
+            if (event.key === "Enter") {
+              const inputElement = document.getElementById(ID_INPUT_TD_TITLE)
+              if (inputElement) {
                 // @ts-ignore
-                args.setState({ items: [...args.state.items, { id: getRandomString(), title: value }] })
-                inputElement.setAttribute("value", "")
+                const value = inputElement.value
+                if (value) {
+                  // @ts-ignore
+                  args.setState({ items: [...args.state.items, { id: getRandomString(), title: value }] })
+                  inputElement.setAttribute("value", "")
+                }
               }
             }
-          }
+          },
         },
-      }),
+        { id: ID_INPUT_TD_TITLE, placeholder: "Title", autocomplete: "off", spellcheck: "false" },
+      ),
       eButton("Add", () => {
-        const inputElement = document.getElementById("td-input")
+        const inputElement = document.getElementById(ID_INPUT_TD_TITLE)
         if (inputElement) {
           // @ts-ignore
           const value = inputElement.value
@@ -171,6 +172,8 @@ const td = defineComponent("td", {
             // @ts-ignore
             args.setState({ items: [...args.state.items, { id: getRandomString(), title: value }] })
             inputElement.setAttribute("value", "")
+          } else {
+            alert("Cannot add to do item: title is empty.")
           }
         }
       }),

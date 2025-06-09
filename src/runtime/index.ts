@@ -1,4 +1,4 @@
 export * from "./init"
 export * from "./root"
-export * from "./simple"
+export * from "./ui"
 export * from "./sw"

@@ -21,6 +21,13 @@ const getAsset = ({ asset, nextSource, nextSize, nextInfo }) => {
   }
 }
 
+const stylePaths = [
+  path.join(CWD, "resources", "theme.css"),
+  path.join(CWD, "resources", "base.css"),
+  path.join(CWD, "resources", "simple.css"),
+  path.join(CWD, "project", "index.css"),
+]
+
 export const processViews = async (compiler, compilation) => {
   const sourcePath = path.join(CWD, "public", "index.html")
   const assetName = "index.html"
@@ -31,10 +38,7 @@ export const processViews = async (compiler, compilation) => {
       const headOld = split[0]
 
       const description = "All inclusive web framework with zero configuration, batteries included!"
-      const stylesBase = fs.readFileSync(path.join(CWD, "resources", "base.css")).toString()
-      const stylesSimple = fs.readFileSync(path.join(CWD, "resources", "simple.css")).toString()
-      const stylesView = fs.readFileSync(path.join(CWD, "project", "index.css")).toString()
-      const styles = [stylesBase, stylesSimple, stylesView].join(" ")
+      const styles = stylePaths.map((stylePath) => fs.readFileSync(stylePath).toString()).join(" ")
 
       const headNext = `${headOld}<meta name="description" content="${description}"><style>${styles}</style>`
       return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
