@@ -1,7 +1,7 @@
 import { execSync, spawn } from "child_process"
 import { rmSync, existsSync } from "node:fs"
 import { join } from "node:path"
-import { error, logEofolScript, spawnOptions, success } from "./impl/util.js"
+import { error, logEofolScript, PATH, spawnOptions, success } from "./impl/util.js"
 
 const argv = process.argv
 
@@ -16,10 +16,8 @@ if (argv.length >= 2) {
   })
 }
 
-const CWD = process.cwd()
-
-const packageLockPath = join(CWD, "package-lock.json")
-const nodeModulesPath = join(CWD, "node_modules")
+const packageLockPath = join(PATH.CWD, "package-lock.json")
+const nodeModulesPath = join(PATH.CWD, "node_modules")
 
 const steps = argForce ? 4 : 3
 

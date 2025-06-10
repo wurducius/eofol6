@@ -1,88 +1,33 @@
-import { logEofolScript, error, prettySize, prettyTime, success } from "./impl/util.js"
-import fs from "node:fs"
-import path from "path"
-import webpack from "webpack"
-import getWebpackConfigImport from "../webpack/webpack.config.cjs"
+import { logEofolScript, error, prettySize, prettyTime, success, dirSize, PATH } from "./impl/util.js"
+import { buildWebpack, copyPublicDir, touchBuildDirs } from "./impl/build-util.js"
+import ConfigCompile from "../config-compile.js"
 
-const getWebpackConfig = getWebpackConfigImport.default
-
-const productionOptions = { mode: "production", sourceMap: false }
-
-const webpackConfig = getWebpackConfig(productionOptions)
-
-const CWD = process.cwd()
-
-const publicPath = path.join(CWD, "public")
-const distPath = path.join(CWD, "dist")
-
-const touch = (path) => {
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true })
-  }
-}
-
-const copyPublicDir = (source, target) => {
-  return fs.promises.readdir(source, { recursive: true }).then((dir) =>
-    dir.map((file) => {
-      const sourcePath = path.join(source, file)
-      const targetPath = path.join(target, file)
-      if (file.endsWith("html") || fs.lstatSync(path.join(source, file)).isDirectory()) {
-        return
-      }
-      return fs.promises.cp(sourcePath, targetPath)
-    }),
-  )
-}
-
-const buildWebpack = (onSuccess, onError) => {
-  return webpack(webpackConfig, (err, stats) => {
-    if (err || stats.hasErrors()) {
-      if (onError) {
-        onError(err)
-      }
-    } else {
-      console.log(success(`Project built at: ${distPath}`))
-      if (onSuccess) {
-        onSuccess()
-      }
-    }
-  })
-}
-
-const touchBuildDirs = () => {
-  const assetsPath = path.join(distPath, "assets")
-  const mediaPath = path.join(assetsPath, "media")
-  const paths = [
-    assetsPath,
-    path.join(assetsPath, "js"),
-    path.join(assetsPath, "css"),
-    path.join(mediaPath),
-    path.join(mediaPath, "fonts"),
-    path.join(mediaPath, "images"),
-    path.join(mediaPath, "icons"),
-  ]
-  paths.forEach((path) => {
-    touch(path)
-  })
-}
-
-const dirSize = async (directory) => {
-  const files = await fs.promises.readdir(directory)
-  const stats = files.map((file) => fs.promises.stat(path.join(directory, file)))
-  return (await Promise.all(stats)).reduce((accumulator, { size }) => accumulator + size, 0)
-}
+const { VERBOSE_COMPILE, PROFILER_COMPILE } = ConfigCompile
 
 const build = () => {
   const start = new Date().valueOf()
   buildWebpack(
     () => {
+      const webpackBuilt = new Date().valueOf()
+      if (PROFILER_COMPILE) {
+        console.log(success(`[1/2] Webpack compilation took: ${prettyTime(webpackBuilt - start)}`))
+      }
       touchBuildDirs()
-      copyPublicDir(publicPath, distPath).then(() => {
-        const elapsed = new Date().valueOf() - start
-        dirSize(distPath).then((size) => {
-          console.log(success(`Build size: ${prettySize(size)}`))
-          console.log(success(`Compilation took: ${prettyTime(elapsed)}`))
-        })
+      copyPublicDir(PATH.publicPath, PATH.distPath).then(() => {
+        const publicDirCopied = new Date().valueOf()
+        if (PROFILER_COMPILE) {
+          console.log(success(`[2/2] Copying public directory took: ${prettyTime(publicDirCopied - webpackBuilt)}`))
+        }
+        console.log(success(`Build successful`))
+        if (PROFILER_COMPILE) {
+          dirSize(PATH.distPath).then((size) => {
+            console.log(success(`Total build took: ${prettyTime(publicDirCopied - start)}`))
+            console.log(success(`Build size: ${prettySize(size)}`))
+          })
+        }
+        if (VERBOSE_COMPILE) {
+          console.log(success(`Project built at: ${PATH.distPath}`))
+        }
       })
     },
     (err) => {

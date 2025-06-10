@@ -1,5 +1,5 @@
 import { arrayCombinator, domClearChildren } from "../util"
-import { getVdom, renderVdomToDom, setVdom } from "../core"
+import { getVdom, renderVdomToDom, setVdom, traversePreVdom, traverseVdom } from "../core"
 import { VDOMItem } from "../types"
 import { initEofol } from "./init"
 
@@ -14,6 +14,7 @@ const setRoot = (rootId: string) => {
 
 const renderEofolInternal = () => {
   const root = getRoot()
+  //arrayCombinator(traverseVdom(traversePreVdom(getVdom())), (item) => {
   arrayCombinator(renderVdomToDom(getVdom()), (item) => {
     root?.appendChild(item)
   })

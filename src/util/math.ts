@@ -1,4 +1,4 @@
-import { CRYPTO_KEY_ID_LENGTH } from "../constants"
+import ConfigRuntime from "../../config-runtime"
 
 const generateIdInternal = (length: number) => () =>
   Array(length)
@@ -6,4 +6,4 @@ const generateIdInternal = (length: number) => () =>
     .map(() => Math.random().toString(36).charAt(2))
     .join("")
 
-export const generateId = generateIdInternal(CRYPTO_KEY_ID_LENGTH)
+export const generateId = generateIdInternal(ConfigRuntime.KEY_LENGTH)

@@ -1,18 +1,13 @@
 import { registerSw } from "./sw"
-
-const RUNTIME_CONFIG = {
-  SERVICE_WORKER_ENABLED: process.env.SERVICE_WORKER_ENABLED === "true",
-  SERVICE_WORKER_PATH: process.env.SERVICE_WORKER_PATH ?? "service-worker.js",
-  VERBOSE: process.env.VERBOSE === "true",
-}
+import ConfigRuntime from "../../config-runtime"
 
 export const initEofol = () => {
   registerSw({
-    enabled: RUNTIME_CONFIG.SERVICE_WORKER_ENABLED,
-    swPath: RUNTIME_CONFIG.SERVICE_WORKER_PATH,
-    verbose: RUNTIME_CONFIG.VERBOSE,
+    enabled: ConfigRuntime.SERVICE_WORKER_ENABLED,
+    swPath: ConfigRuntime.SERVICE_WORKER_PATH,
+    verbose: ConfigRuntime.VERBOSE_RUNTIME,
   }).then(() => {
-    if (RUNTIME_CONFIG.VERBOSE) {
+    if (ConfigRuntime.VERBOSE_RUNTIME) {
       console.log("Eofol initialized.")
     }
   })

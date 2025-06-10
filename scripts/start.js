@@ -2,6 +2,7 @@ import Webpack from "webpack"
 import WebpackDevServer from "webpack-dev-server"
 import getWebpackConfigImport from "../webpack/webpack.config.cjs"
 import { logEofolScript, primary } from "./impl/util.js"
+import ConfigCompile from "../config-compile.js"
 
 const getWebpackConfig = getWebpackConfigImport.default
 
@@ -21,7 +22,7 @@ if (argv.length >= 2) {
 const webpackConfig = getWebpackConfig({ analyze: argAnalyze })
 
 const compiler = Webpack(webpackConfig)
-const devServerOptions = { ...webpackConfig.devServer, open: true }
+const devServerOptions = { ...webpackConfig.devServer, open: ConfigCompile.OPEN, port: ConfigCompile.PORT }
 const server = new WebpackDevServer(devServerOptions, compiler)
 
 const runServer = async () => {
@@ -29,7 +30,9 @@ const runServer = async () => {
 }
 
 logEofolScript("start")
-console.log(primary("Starting server..."))
+if (ConfigCompile.VERBOSE_COMPILE) {
+  console.log(primary("Starting server..."))
+}
 console.clear()
 
 runServer()
