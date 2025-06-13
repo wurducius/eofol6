@@ -1,5 +1,5 @@
-import { arrayCombinator, domClearChildren } from "../util"
-import { getVdom, renderVdomToDom, setVdom, traversePreVdom, traverseVdom } from "../core"
+import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "../util"
+import { getVdom, renderVdomToDom, setVdom } from "../core"
 import { VDOMItem } from "../types"
 import { initEofol } from "./init"
 
@@ -14,33 +14,40 @@ const setRoot = (rootId: string) => {
 
 const renderEofolInternal = () => {
   const root = getRoot()
-  //arrayCombinator(traverseVdom(traversePreVdom(getVdom())), (item) => {
-  arrayCombinator(renderVdomToDom(getVdom()), (item) => {
+  // arrayCombinator(traverseVdom(traversePreVdom(getVdom())), (item) => {
+  const dom = renderVdomToDom(getVdom())
+  arrayCombinator(dom, (item) => {
     root?.appendChild(item)
   })
 }
 
 export const forceUpdateEofol = () => {
+  profilerStart("forceUpdate")
   const root = getRoot()
   if (root) {
     domClearChildren(root)
     renderEofolInternal()
   }
+  profilerEnd("forceUpdate", "Force update")
 }
 
 export const updateEofol = () => {
+  profilerStart("update")
   const root = getRoot()
   if (root) {
     domClearChildren(root)
     renderEofolInternal()
   }
+  profilerEnd("update", "Update")
 }
 
 export const mountEofol = (rootId: string, vdom: VDOMItem) => {
+  profilerStart("mount")
   const root = setRoot(rootId)
   if (root) {
     setVdom(vdom)
     renderEofolInternal()
     initEofol()
   }
+  profilerEnd("mount", "Mount")
 }
