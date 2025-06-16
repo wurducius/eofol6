@@ -1,5 +1,5 @@
 import ConfigRuntime from "../../config-runtime"
-import { log } from "./log"
+import { logProfiler } from "./log"
 import { PROFILER_PRECISION_DIGITS } from "../constants"
 
 export const prettyTime = (ms: number) => {
@@ -40,7 +40,7 @@ export const profilerEnd = (label: string, msg: string) => {
   if (ConfigRuntime.PROFILER_RUNTIME) {
     const end = getCurrentTime()
     const start = profilerRegistry[label]
-    log(`Eofol [PROFILER] -> ${msg} took ${prettyTime(formatElapsed(end - start))}`)
+    logProfiler(`${msg} took ${prettyTime(formatElapsed(end - start))}`)
     delete profilerRegistry[label]
   }
 }

@@ -4,6 +4,8 @@ let CACHE_NAME = "cache",
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(`${CACHE_NAME}-${CACHE_VERSION}`).then((e) => e.addAll(urlsToCache)))
 })
+/*
 self.addEventListener("fetch", (t) => {
   t.respondWith(caches.match(t.request).then((e) => e || fetch(t.request)))
 })
+*/

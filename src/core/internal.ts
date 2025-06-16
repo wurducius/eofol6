@@ -31,7 +31,7 @@ export const addDef = (defName: string, defArgs: DefArgs) => {
   internal.defs[defName] = defArgs
 }
 
-export const defineComponent = (componentName: string, componentArgs: DefArgs) => {
+export const define = (componentName: string, componentArgs: DefArgs) => {
   addDef(componentName, componentArgs)
   return (props?: Props) => {
     return e(componentName, props)

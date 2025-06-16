@@ -20,6 +20,7 @@ export const getArgs = (x: { def: DefArgs; vdom: VDOMItem }): Args => {
     const oldInstance = getInstance(vdom.key)
     const next = { ...oldInstance, state: nextState }
     setInstance(vdom.key, next)
+    // @TODO update only this component
     updateEofol()
   }
   const mergeState = (next: Partial<State>) => {
