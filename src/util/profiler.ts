@@ -1,4 +1,6 @@
 import ConfigRuntime from "../../config-runtime"
+import { log } from "./log"
+import { PROFILER_PRECISION_DIGITS } from "../constants"
 
 export const prettyTime = (ms: number) => {
   let seconds = Number((ms / 1000).toFixed(1))
@@ -12,22 +14,39 @@ export const prettyTime = (ms: number) => {
   else return `${days} d`
 }
 
-export const getCurrentTime = () => performance.now()
+export const getCurrentTime = () => window.performance.now()
 
-const profilerRegistry: Record<string, number> = {}
+export const formatElapsed = (delta: number) => Number(delta.toFixed(PROFILER_PRECISION_DIGITS))
+
+let profilerRegistry: Record<string, number> = {}
 
 export const profilerStart = (label: string) => {
   if (ConfigRuntime.PROFILER_RUNTIME) {
-    profilerRegistry[label] = getCurrentTime()
+    const time = getCurrentTime()
+    profilerRegistry[label] = time
+    return time
+  }
+}
+
+export const getProfiler = (label: string) => {
+  if (ConfigRuntime.PROFILER_RUNTIME) {
+    const time = profilerRegistry[label]
+    delete profilerRegistry[label]
+    return time
   }
 }
 
 export const profilerEnd = (label: string, msg: string) => {
   if (ConfigRuntime.PROFILER_RUNTIME) {
-    const start = profilerRegistry[label]
     const end = getCurrentTime()
-    const delta = Number((end - start).toFixed(1))
-    console.log("EOFOL PROFILER: " + msg + " took " + prettyTime(delta))
+    const start = profilerRegistry[label]
+    log(`Eofol [PROFILER] -> ${msg} took ${prettyTime(formatElapsed(end - start))}`)
     delete profilerRegistry[label]
+  }
+}
+
+export const profilerClear = () => {
+  if (ConfigRuntime.PROFILER_RUNTIME) {
+    profilerRegistry = {}
   }
 }

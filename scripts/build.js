@@ -18,7 +18,7 @@ const build = () => {
         if (PROFILER_COMPILE) {
           console.log(success(`[2/2] Copying public directory took: ${prettyTime(publicDirCopied - webpackBuilt)}`))
         }
-        console.log(success(`Build successful`))
+        console.log(success("Build successful"))
         if (PROFILER_COMPILE) {
           dirSize(PATH.distPath).then((size) => {
             console.log(success(`Total build took: ${prettyTime(publicDirCopied - start)}`))

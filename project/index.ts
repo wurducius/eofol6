@@ -79,7 +79,6 @@ const air = defineComponent("air", {
   render: (args) => col(["Air", args.state.aqi !== undefined && div(`AQI: ${args.state.aqi}`)]),
   effect: [
     (args) => {
-      console.log("EFFECT!")
       // @ts-ignore
       if (args.state.aqi === undefined) {
         args.mergeState({ aqi: "Loading" })
@@ -95,9 +94,7 @@ const air = defineComponent("air", {
             }
           })
       }
-      return () => {
-        console.log("EFFECT CLEANUP!")
-      }
+      return () => {}
     },
   ],
 })
