@@ -103,9 +103,12 @@ export const traversePreVdom = (prevdom) => {
   } else if (typeof prevdom === "string") {
     return prevdom
   } else {
-    const visited = renderPrevdomToVdom(prevdom)
-    if (visited !== undefined && typeof visited !== "string" && prevdom?.type !== "custom") {
-      visited.children = mapCombinator(prevdom.children, (child) => {
+    // const key = prevdom.key
+    //  const instance = getInstance(key)
+    const rendered = prevdom.render()
+    const visited = renderPrevdomToVdom(rendered)
+    if (visited !== undefined && typeof visited !== "string" && rendered?.type !== "custom") {
+      visited.children = mapCombinator(rendered.children, (child) => {
         return traversePreVdom(child)
       })
     }

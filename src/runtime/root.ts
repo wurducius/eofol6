@@ -1,5 +1,5 @@
 import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "../util"
-import { getVdom, renderVdomToDom, setVdom } from "../core"
+import { getVdom, setVdom, traversePreVdom, traverseVdom } from "../core"
 import { VDOMItem } from "../types"
 import { initEofol } from "./init"
 
@@ -14,11 +14,20 @@ const setRoot = (rootId: string) => {
 
 const renderEofolInternal = () => {
   const root = getRoot()
-  // arrayCombinator(traverseVdom(traversePreVdom(getVdom())), (item) => {
-  const dom = renderVdomToDom(getVdom())
-  arrayCombinator(dom, (item) => {
-    root?.appendChild(item)
-  })
+  const dom = traverseVdom(traversePreVdom(getVdom()))
+  if (root) {
+    arrayCombinator(dom, (item) => {
+      if (typeof item === "string") {
+        if (root.innerHTML) {
+          root.innerHTML = `${root.innerHTML}, ${item}`
+        } else {
+          root.innerHTML = item
+        }
+      } else if (item) {
+        root?.appendChild(item)
+      }
+    })
+  }
 }
 
 export const forceUpdateEofol = () => {
@@ -41,7 +50,7 @@ export const updateEofol = () => {
   profilerEnd("update", "Update")
 }
 
-export const mountEofol = (rootId: string, vdom: VDOMItem) => {
+export const mountEofol = (rootId: string, vdom: () => VDOMItem) => {
   profilerStart("mount")
   const root = setRoot(rootId)
   if (root) {
