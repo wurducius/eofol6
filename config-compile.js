@@ -33,6 +33,7 @@ const ConfigCompile = {
   OPTIMIZE_ASSETS: envBoolean("OPTIMIZE_ASSETS", true),
   INJECT_CSS_BASE: envBoolean("INJECT_CSS_BASE", true),
   TEMPLATE_ENABLED: envBoolean("TEMPLATE_ENABLED", true),
+  CLEAR_SCREEN: envBoolean("CLEAR_SCREEN", true),
   BUILD_DIRNAME: envString("BUILD_DIRNAME", "dist"),
   PUBLIC_DIRNAME: envString("PUBLIC_DIRNAME", "public"),
   PROJECT_DIRNAME: envString("PROJECT_DIRNAME", "project"),

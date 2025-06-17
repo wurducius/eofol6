@@ -1,7 +1,7 @@
 import Webpack from "webpack"
 import WebpackDevServer from "webpack-dev-server"
 import getWebpackConfigImport from "../webpack/webpack.config.cjs"
-import { logEofolScript, primary } from "./impl/util.js"
+import { error, logEofolScript, primary } from "./impl/util.js"
 import ConfigCompile from "../config-compile.js"
 
 const getWebpackConfig = getWebpackConfigImport.default
@@ -26,13 +26,20 @@ const devServerOptions = { ...webpackConfig.devServer, open: ConfigCompile.OPEN,
 const server = new WebpackDevServer(devServerOptions, compiler)
 
 const runServer = async () => {
-  await server.start()
+  console.log(primary("Starting dev server @ http://localhost:8080"))
+  await server.startCallback((err) => {
+    if (err) {
+      console.log(error(`Compilation error: ${err.message}`))
+    }
+  })
 }
 
 logEofolScript("start")
 if (ConfigCompile.VERBOSE_COMPILE) {
   console.log(primary("Starting server..."))
 }
-console.clear()
+if (ConfigCompile.CLEAR_SCREEN) {
+  console.clear()
+}
 
 runServer()
