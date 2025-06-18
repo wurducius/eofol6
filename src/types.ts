@@ -44,6 +44,7 @@ export type Args = {
   resetState: () => void
   initialState: State
   props: Props
+  children?: Children
 }
 
 export type DefArgs = {

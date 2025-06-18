@@ -25,7 +25,7 @@ import { j } from "../src/core/pragma"
 
 const React = { createElement: j }
 
-const rand = define("rand", {
+define("rand", {
   render: () =>
     eContainer([
       <h2>Render test</h2>,
@@ -37,7 +37,7 @@ const rand = define("rand", {
     ]),
 })
 
-const counter = define("counter", {
+define("counter", {
   state: { count: 0 },
   render: (args) =>
     eContainer([
@@ -54,23 +54,23 @@ const counter = define("counter", {
     ]),
 })
 
-const propsTest = define("propsTest", {
+define("propsTest", {
   render: (args) => center(`${args.props.label} prop value: ${args.props.arg}`),
 })
 
-const propsTestContainer = define("propsTestContainer", {
+define("propsTestContainer", {
   state: { first: 0, second: 0 },
   render: (args) =>
     eContainer([
       <h2>Props test</h2>,
       // @ts-ignore
-      propsTest({ arg: args.state.first, label: "First" }),
+      <propsTest arg={args.state.first} label={"First"} />,
       eButton("Increment first", () => {
         // @ts-ignore
         args.mergeState({ first: args.state.first + 1 })
       }),
       // @ts-ignore
-      propsTest({ arg: args.state.second, label: "Second" }),
+      <propsTest arg={args.state.second} label={"Second"} />,
       eButton("Increment second", () => {
         // @ts-ignore
         args.mergeState({ second: args.state.second + 1 })
@@ -78,7 +78,7 @@ const propsTestContainer = define("propsTestContainer", {
     ]),
 })
 
-const air = define("air", {
+define("air", {
   state: { aqi: undefined },
   render: (args) =>
     // @ts-ignore
@@ -107,7 +107,7 @@ const air = define("air", {
 
 const ID_INPUT_TD_TITLE = "td-input"
 
-const td = define("td", {
+define("td", {
   state: { items: [] },
   render: (args) =>
     eContainer([
@@ -165,23 +165,28 @@ const td = define("td", {
     ]),
 })
 
-const sxTest = define("sxTest", {
+define("sxTest", {
   render: () => eContainer([<h2>Dependency test</h2>, div("Cyan", { class: sx({ color: "cyan" }) })]),
 })
 
-const childrenTestSecond = define("childrenTestSecond", {
-  render: (args) => div(`Value = ${args.props.value}`),
+define("childrenTestSecond", {
+  render: (args) => <div>{`Value = ${args.props.value}`}</div>,
 })
-const childrenTestFirst = define("childrenTestFirst", {
-  render: (args) => div(childrenTestSecond({ value: args.props.value })),
+define("childrenTestFirst", {
+  render: (args) => (
+    <div>
+      <childrenTestSecond value={args.props.value} />
+    </div>
+  ),
 })
-const childrenTestRoot = define("childrenTestRoot", {
+
+define("childrenTestRoot", {
   state: { value: 0 },
   render: (args) =>
     eContainer([
       <h2>Children of children test</h2>,
       // @ts-ignore
-      childrenTestFirst({ value: args.state.value }),
+      <childrenTestFirst value={args.state.value} />,
       eButton("+", () => {
         // @ts-ignore
         args.setState({ value: args.state.value + 1 })
@@ -196,7 +201,7 @@ createStore(STORE_FIRST, { value: 42 })
 
 createProjection(STORE_FIRST, STORE_SECOND, (state: { value: number }) => ({ derived: state.value * 2 }))
 
-const storeTest = define("storeTest", {
+define("storeTest", {
   subscribe: STORE_FIRST,
   render: () => {
     // @ts-ignore
@@ -219,12 +224,18 @@ const storeTest = define("storeTest", {
   },
 })
 
-const projectionTest = define("projectionTest", {
+define("projectionTest", {
   subscribe: [STORE_SECOND],
   render: () => {
     // @ts-ignore
     const derived = selector(STORE_SECOND)?.derived
     return eContainer([<h2>Projection test</h2>, <div>{`Projection value = ${derived}`}</div>])
+  },
+})
+
+define("childrenPropTest", {
+  render: (args) => {
+    return eContainer(args.children)
   },
 })
 
@@ -241,5 +252,8 @@ mountEofol(
     <childrenTestRoot />,
     <storeTest />,
     <projectionTest />,
+    <childrenPropTest>
+      <div>Child passed as prop</div>
+    </childrenPropTest>,
   ]),
 )

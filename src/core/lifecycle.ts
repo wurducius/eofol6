@@ -30,7 +30,7 @@ export const getArgs = (x: { def: DefArgs; vdom: VDOMItem }): Args => {
     setState({ ...def.state })
   }
   const props = currentInstance.props
-  return {
+  const result: Args = {
     initialState: def.state ?? {},
     state,
     setState,
@@ -38,6 +38,10 @@ export const getArgs = (x: { def: DefArgs; vdom: VDOMItem }): Args => {
     resetState,
     props: props ?? {},
   }
+  if (vdom.children) {
+    result.children = vdom.children
+  }
+  return result
 }
 
 export const Lifecycle = {
