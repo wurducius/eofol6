@@ -86,3 +86,15 @@ body {
   color: darkgrey;
   border: 1px solid darkslateblue;
 }
+
+.mr-2 {
+  margin-right: 16px;
+}
+
+.td-container {
+  width: 240px;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}

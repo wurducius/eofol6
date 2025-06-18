@@ -108,20 +108,21 @@ const td = define("td", {
   render: (args) =>
     eContainer([
       h2("To do"),
-      eContainer(
+      div(
         // @ts-ignore
         args.state.items.map((item) =>
           row(
             [
-              div(item.title),
+              div(item.title, { class: "mr-2" }),
               eButton("X", () => {
                 // @ts-ignore
                 args.setState({ items: args.state.items.filter((x) => x.id !== item.id) })
               }),
             ],
-            { class: "center" },
+            { class: "justify-space-between center" },
           ),
         ),
+        { class: "col td-container" },
       ),
       input(
         {

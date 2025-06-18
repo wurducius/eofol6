@@ -1,6 +1,7 @@
-import { Attributes, button, Children, col } from "../src"
+import { Attributes, button, Children, col, cx } from "../src"
 
-export const eContainer = (children?: Children) => col(children, { class: "e-container" })
+export const eContainer = (children?: Children, className?: string) =>
+  col(children, { class: cx("e-container", className) })
 
 export const eButton = (children: Children, onclick: () => void, attributes?: Attributes) =>
   button(

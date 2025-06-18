@@ -14,4 +14,3 @@
 ## Cosmetic
 
 - typing vdom.ts
-- inject files to install into service worker
