@@ -1,5 +1,6 @@
-const { optimizeAssets, processViews } = require("./eofol-compile")
-const { primary, success, error, prettyTime, formatElapsed } = require("./plugin-util.cjs")
+const { primary, success, error, prettyTime, formatElapsed } = require("./plugin/plugin-util.cjs")
+const { processViews } = require("./plugin/process-views")
+const { optimizeAssets } = require("./plugin/optimize-assets")
 
 const PLUGIN_NAME = "Eofol6 webpack plugin"
 
