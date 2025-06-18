@@ -21,11 +21,14 @@ import { getRandomString } from "./util"
 import { eButton, eContainer } from "./e-ui"
 import { notifyError } from "./notification"
 import { sx } from "eofol-sx"
+import { j } from "../src/core/pragma"
+
+const React = { createElement: j }
 
 const rand = define("rand", {
   render: () =>
     eContainer([
-      h2("Render test"),
+      <h2>Render test</h2>,
       center(`Render id: ${getRandomString()}`),
       eButton("Force update", () => {
         forceUpdateEofol()
@@ -38,7 +41,7 @@ const counter = define("counter", {
   state: { count: 0 },
   render: (args) =>
     eContainer([
-      h2("State test"),
+      <h2>State test</h2>,
       // @ts-ignore
       center(`Clicked ${args.state.count} times`),
       eButton("Click", () => {
@@ -59,7 +62,7 @@ const propsTestContainer = define("propsTestContainer", {
   state: { first: 0, second: 0 },
   render: (args) =>
     eContainer([
-      h2("Props test"),
+      <h2>Props test</h2>,
       // @ts-ignore
       propsTest({ arg: args.state.first, label: "First" }),
       eButton("Increment first", () => {
@@ -77,8 +80,9 @@ const propsTestContainer = define("propsTestContainer", {
 
 const air = define("air", {
   state: { aqi: undefined },
-  // @ts-ignore
-  render: (args) => col([h2("Effect test: Air"), args.state.aqi !== undefined && div(`AQI: ${args.state.aqi}`)]),
+  render: (args) =>
+    // @ts-ignore
+    col([<h2>Effect test: Air</h2>, args.state.aqi !== undefined && <div>{`AQI: ${args.state.aqi}`}</div>]),
   effect: [
     (args) => {
       // @ts-ignore
@@ -107,7 +111,7 @@ const td = define("td", {
   state: { items: [] },
   render: (args) =>
     eContainer([
-      h2("To do"),
+      <h2>To do</h2>,
       div(
         // @ts-ignore
         args.state.items.map((item) =>
@@ -162,7 +166,7 @@ const td = define("td", {
 })
 
 const sxTest = define("sxTest", {
-  render: () => eContainer([h2("Dependency test"), div("Cyan", { class: sx({ color: "cyan" }) })]),
+  render: () => eContainer([<h2>Dependency test</h2>, div("Cyan", { class: sx({ color: "cyan" }) })]),
 })
 
 const childrenTestSecond = define("childrenTestSecond", {
@@ -175,7 +179,7 @@ const childrenTestRoot = define("childrenTestRoot", {
   state: { value: 0 },
   render: (args) =>
     eContainer([
-      h2("Children of children test"),
+      <h2>Children of children test</h2>,
       // @ts-ignore
       childrenTestFirst({ value: args.state.value }),
       eButton("+", () => {
@@ -200,7 +204,7 @@ const storeTest = define("storeTest", {
     // @ts-ignore
     const derived = selector(STORE_SECOND)?.derived
     return eContainer([
-      h2("Store test"),
+      <h2>Store test</h2>,
       div(`Store value = ${value}`),
       eButton("Increment store", () => {
         mergeStore(STORE_FIRST, { value: value + 1 })
@@ -220,22 +224,22 @@ const projectionTest = define("projectionTest", {
   render: () => {
     // @ts-ignore
     const derived = selector(STORE_SECOND)?.derived
-    return eContainer([h2("Projection test"), div(`Projection value = ${derived}`)])
+    return eContainer([<h2>Projection test</h2>, <div>{`Projection value = ${derived}`}</div>])
   },
 })
 
 mountEofol(
   "root",
   container([
-    h1("Eofol6"),
-    rand(),
-    counter(),
-    propsTestContainer(),
-    air(),
-    td(),
-    sxTest(),
-    childrenTestRoot(),
-    storeTest(),
-    projectionTest(),
+    <h1>Eofol6</h1>,
+    <rand />,
+    <counter />,
+    <propsTestContainer />,
+    <air />,
+    <td />,
+    <sxTest />,
+    <childrenTestRoot />,
+    <storeTest />,
+    <projectionTest />,
   ]),
 )

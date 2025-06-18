@@ -9,7 +9,6 @@
 ## Secondary
 
 - error overlay
-- compile jsx
 
 ## Cosmetic
 

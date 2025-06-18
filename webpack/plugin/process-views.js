@@ -29,9 +29,9 @@ export const processViews = async (compiler, compilation) => {
 
           const description = "All inclusive web framework with zero configuration, batteries included!"
           const customStylesheetPath = getStylesheetPath(view)
-          const styles = fs.existsSync(customStylesheetPath)
-            ? [...stylePaths, customStylesheetPath]
-            : stylePaths.map((stylePath) => fs.readFileSync(stylePath).toString()).join(" ")
+          const styles = (fs.existsSync(customStylesheetPath) ? [...stylePaths, customStylesheetPath] : stylePaths)
+            .map((stylePath) => fs.readFileSync(stylePath).toString())
+            .join(" ")
 
           const headNext = `${headOld}<meta name="description" content="${description}"><style>${styles}</style>`
           return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
