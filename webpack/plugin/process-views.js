@@ -17,7 +17,9 @@ const getViewPath = (view) => path.join(publicPath, `${view}.html`)
 const getStylesheetPath = (view) => path.join(projectPath, `${view}.css`)
 
 export const processViews = async (compiler, compilation) => {
-  const views = ["index"]
+  const views = (await fs.promises.readdir(publicPath, { recursive: true }))
+    .filter((filename) => filename.endsWith(".html"))
+    .map((filename) => filename.substring(0, filename.lastIndexOf(".")) || filename)
   await Promise.all(
     views.map(async (view) => {
       const assetName = `${view}.html`
