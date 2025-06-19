@@ -1,5 +1,5 @@
 import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "../util"
-import { getVdom, setVdom, traversePreVdom, traverseVdom } from "../core"
+import { appendToDom, getVdom, setVdom, traversePreVdom, traverseVdom } from "../core"
 import { VDOMItem } from "../types"
 import { initEofol } from "./init"
 
@@ -17,15 +17,7 @@ const renderEofolInternal = () => {
   const dom = traverseVdom(traversePreVdom(getVdom()))
   if (root) {
     arrayCombinator(dom, (item) => {
-      if (typeof item === "string") {
-        if (root.innerHTML) {
-          root.innerHTML = `${root.innerHTML}, ${item}`
-        } else {
-          root.innerHTML = item
-        }
-      } else if (item) {
-        root?.appendChild(item)
-      }
+      appendToDom(root, item)
     })
   }
 }

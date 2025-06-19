@@ -21,6 +21,18 @@ const renderTagDom = (vdom: VDOMItem) => {
   return element
 }
 
+export const appendToDom = (root, item) => {
+  if (typeof item === "string") {
+    if (root.innerHTML) {
+      root.innerHTML = `${root.innerHTML}, ${item}`
+    } else {
+      root.innerHTML = item
+    }
+  } else if (item) {
+    root?.appendChild(item)
+  }
+}
+
 const renderPrevdomToVdom = (prevdom) => {
   if (prevdom?.type === "custom") {
     const def = getDef(prevdom.tag)
@@ -67,11 +79,7 @@ export const traverseVdom = (vdom) => {
     if (visited && vdom?.children) {
       arrayCombinator(vdom.children, (child) => {
         const visitedChild = traverseVdom(child)
-        if (typeof visitedChild === "string") {
-          visited.innerHTML = visitedChild
-        } else if (visitedChild !== undefined) {
-          visited.appendChild(visitedChild)
-        }
+        appendToDom(visited, visitedChild)
       })
     }
     return visited
