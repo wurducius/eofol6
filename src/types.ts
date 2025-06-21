@@ -49,7 +49,7 @@ export type Args = {
 
 export type DefArgs = {
   // eslint-disable-next-line no-unused-vars
-  render: (args: Args) => EofolNode
+  render: (args: Args) => { render: () => VDOMItem; key: string }
   state?: State
   // eslint-disable-next-line no-unused-vars
   shouldUpdate?: (args: { state: State; props: Props }) => boolean

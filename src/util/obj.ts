@@ -49,3 +49,5 @@ export const isEmpty = (obj: object) => {
   }
   return true
 }
+
+export const isString = (x: unknown): x is string => typeof x === "string"
