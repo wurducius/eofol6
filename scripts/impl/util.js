@@ -36,6 +36,21 @@ export const dirSize = async (directory) => {
   return (await Promise.all(stats)).reduce((accumulator, { size }) => accumulator + size, 0)
 }
 
+export const getArgv = (args) => {
+  const argv = process.argv
+  let argForce = false
+  if (argv.length >= 2) {
+    argv.forEach((a, i) => {
+      if (i >= 2) {
+        if (a === args.short || a === args.long) {
+          argForce = true
+        }
+      }
+    })
+  }
+  return argForce
+}
+
 export const spawnOptions = {
   encoding: "utf8",
   cwd: process.cwd(),

@@ -1,20 +1,9 @@
 import { execSync, spawn } from "child_process"
 import { rmSync, existsSync } from "node:fs"
 import { join } from "node:path"
-import { error, logEofolScript, PATH, spawnOptions, success } from "./impl/util.js"
+import { error, getArgv, logEofolScript, PATH, spawnOptions, success } from "./impl/util.js"
 
-const argv = process.argv
-
-let argForce = false
-if (argv.length >= 2) {
-  argv.forEach((a, i) => {
-    if (i >= 2) {
-      if (a === "-f" || a === "--force") {
-        argForce = true
-      }
-    }
-  })
-}
+const argForce = getArgv({ short: "-f", long: "--force" })
 
 const packageLockPath = join(PATH.CWD, "package-lock.json")
 const nodeModulesPath = join(PATH.CWD, "node_modules")
