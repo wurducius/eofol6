@@ -30,7 +30,7 @@ export const setStoreImpl = (name: string, next: object) => {
     setStoreImpl(projectionName, projectionMapping(next))
   })
   // @TODO update only subscribed
-  updateEofol()
+  updateEofol({ update: "store", subscribe: name })
 }
 
 export const resetStore = (name: string) => {

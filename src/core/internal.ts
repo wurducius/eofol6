@@ -3,16 +3,16 @@ import { e } from "./create-element"
 
 const internal: Internal = {
   instances: {},
-  vdom: {
+  vdom: () => ({
     key: "initial",
     tag: "div",
     children: undefined,
-  },
+  }),
   defs: {},
 }
 
 export const getVdom = () => internal.vdom
-export const setVdom = (next: VDOMItem) => {
+export const setVdom = (next: () => VDOMItem) => {
   internal.vdom = next
 }
 

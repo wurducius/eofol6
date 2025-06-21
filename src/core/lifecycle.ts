@@ -21,7 +21,7 @@ export const getArgs = (x: { def: DefArgs; vdom: VDOMItem }): Args => {
     const next = { ...oldInstance, state: nextState }
     setInstance(vdom.key, next)
     // @TODO update only this component
-    updateEofol()
+    updateEofol({ update: "state", key: vdom.key })
   }
   const mergeState = (next: Partial<State>) => {
     setState(mergeDeep(state ?? {}, next))

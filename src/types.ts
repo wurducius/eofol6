@@ -58,8 +58,10 @@ export type DefArgs = {
   effect?: Effect | Effect[]
 }
 
-export type Internal = { instances: Record<string, Instance>; vdom: VDOMItem; defs: Record<string, DefArgs> }
+export type Internal = { instances: Record<string, Instance>; vdom: () => VDOMItem; defs: Record<string, DefArgs> }
 
 export type LifecycleArgs = { args: Args; def: DefArgs }
 
 export type Store = { data: object; initial: object; projections: Record<string, Function> }
+
+export type RenderUpdateArgs = { update: "state" | "store" | "mount" | "forceUpdate"; key?: string; subscribe?: string }
