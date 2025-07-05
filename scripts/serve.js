@@ -1,12 +1,13 @@
 import { execSync } from "child_process"
-import { primary } from "./impl/util.js"
+import { logEofolScript } from "./impl/util.js"
+import ConfigCompile from "../config-compile.js"
 
 const serveOptions = {
-  open: true,
-  port: 8080,
-  root: "./dist",
+  open: ConfigCompile.OPEN,
+  port: ConfigCompile.PORT,
+  root: `./${ConfigCompile.BUILD_DIRNAME}`,
 }
 
-console.log(primary("Eofol6 serve"))
+logEofolScript("serve")
 
 execSync(`npx http-server ${serveOptions.root} -p ${serveOptions.port}${serveOptions.open ? " -o" : ""}`)

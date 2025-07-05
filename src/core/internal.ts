@@ -3,16 +3,16 @@ import { e } from "./create-element"
 
 const internal: Internal = {
   instances: {},
-  vdom: {
+  vdom: () => ({
     key: "initial",
     tag: "div",
     children: undefined,
-  },
+  }),
   defs: {},
 }
 
 export const getVdom = () => internal.vdom
-export const setVdom = (next: VDOMItem) => {
+export const setVdom = (next: () => VDOMItem) => {
   internal.vdom = next
 }
 
@@ -31,7 +31,7 @@ export const addDef = (defName: string, defArgs: DefArgs) => {
   internal.defs[defName] = defArgs
 }
 
-export const defineComponent = (componentName: string, componentArgs: DefArgs) => {
+export const define = (componentName: string, componentArgs: DefArgs) => {
   addDef(componentName, componentArgs)
   return (props?: Props) => {
     return e(componentName, props)

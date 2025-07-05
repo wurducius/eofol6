@@ -12,7 +12,8 @@ body {
 
 .e-container {
   gap: 8px;
-  width: 256px;
+  max-width: 360px;
+  text-align: center;
 }
 
 .e-button {
@@ -33,4 +34,67 @@ body {
   border: 2px solid darkmagenta;
   font-weight: 500;
   font-size: 14px;
+}
+
+.snackbar {
+  min-width: 250px;
+  padding: 16px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 0;
+}
+
+#snackbar-container {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  width: max-content;
+  max-width: 100%;
+  z-index: 1;
+}
+
+#snackbar-container > :not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+.snackbar-danger {
+  background-color: darkred;
+  color: darkgrey;
+  border: 1px solid red;
+}
+
+.snackbar-warning {
+  background-color: yellow;
+  color: dimgrey;
+  border: 1px solid sandybrown;
+}
+
+.snackbar-success {
+  background-color: darkgreen;
+  color: darkgrey;
+  border: 2px solid green;
+}
+
+.snackbar-info {
+  background-color: indigo;
+  color: darkgrey;
+  border: 1px solid darkslateblue;
+}
+
+.mr-2 {
+  margin-right: 16px;
+}
+
+.td-container {
+  width: 240px;
+}
+
+.justify-space-between {
+  justify-content: space-between;
 }

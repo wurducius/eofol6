@@ -1,19 +1,16 @@
 import { rimraf } from "rimraf"
-import { join } from "path"
-import { error, primary, success } from "./impl/util.js"
-
-const CWD = process.cwd()
+import { error, logEofolScript, PATH, success } from "./impl/util.js"
 
 const clean = () => {
-  rimraf.rimrafSync(join(CWD, "dist"))
+  rimraf.rimrafSync(PATH.distPath)
 }
 
-console.log(primary("Eofol6 clean"))
+logEofolScript("clean")
 
 try {
   clean()
 } catch (e) {
-  console.log(error("Cleaning failed"))
+  console.log(error("Clean failed"))
   throw new Error(e.message)
 }
 

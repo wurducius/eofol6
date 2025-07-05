@@ -1,6 +1,6 @@
-import { arrayCombinator, domClearChildren } from "../util"
-import { getVdom, renderVdom, setVdom } from "../core"
-import { VDOMItem } from "../types"
+import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "../util"
+import { appendToDom, getVdom, setVdom, traversePreVdom, traverseVdom } from "../core"
+import { RenderUpdateArgs, VDOMItem } from "../types"
 import { initEofol } from "./init"
 
 let rootInternal: HTMLElement | null
@@ -12,34 +12,44 @@ const setRoot = (rootId: string) => {
   return rootInternal
 }
 
-const renderEofolInternal = () => {
+// eslint-disable-next-line no-unused-vars
+const renderEofolInternal = (args: RenderUpdateArgs) => {
   const root = getRoot()
-  arrayCombinator(renderVdom(getVdom()), (item) => {
-    root?.appendChild(item)
-  })
+  const dom = traverseVdom(traversePreVdom(getVdom()))
+  if (root) {
+    arrayCombinator(dom, (item) => {
+      appendToDom(root, item)
+    })
+  }
 }
 
 export const forceUpdateEofol = () => {
+  profilerStart("forceUpdate")
   const root = getRoot()
   if (root) {
     domClearChildren(root)
-    renderEofolInternal()
+    renderEofolInternal({ update: "forceUpdate" })
   }
+  profilerEnd("forceUpdate", "Force update")
 }
 
-export const updateEofol = () => {
+export const updateEofol = (args: RenderUpdateArgs) => {
+  profilerStart("update")
   const root = getRoot()
   if (root) {
     domClearChildren(root)
-    renderEofolInternal()
+    renderEofolInternal(args)
   }
+  profilerEnd("update", "Update")
 }
 
-export const mountEofol = (rootId: string, vdom: VDOMItem) => {
+export const mountEofol = (rootId: string, vdom: () => VDOMItem) => {
+  profilerStart("mount")
   const root = setRoot(rootId)
   if (root) {
     setVdom(vdom)
-    renderEofolInternal()
+    renderEofolInternal({ update: "mount" })
     initEofol()
   }
+  profilerEnd("mount", "Mount")
 }

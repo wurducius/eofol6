@@ -1,6 +1,7 @@
 const path = require("path")
 const BundleAnalyzerPluginImport = require("webpack-bundle-analyzer")
 const EofolPluginImport = require("./eofol-webpack-plugin.cjs")
+const Dotenv = require("dotenv-webpack")
 
 const EofolPlugin = EofolPluginImport.default
 const BundleAnalyzerPlugin = BundleAnalyzerPluginImport.BundleAnalyzerPlugin
@@ -12,7 +13,7 @@ const buildOptionsDefault = {
   analyze: false,
   sourceMap: true,
   projectPath: "./project",
-  entryFilename: "index.ts",
+  entryFilename: "index.tsx",
   outputBundleFilename: "main.js",
   distDirname: "dist",
 }
@@ -24,27 +25,31 @@ module.exports.default = (args) => {
     mode: buildOptions.mode,
     entry: `${buildOptions.projectPath}/${buildOptions.entryFilename}`,
     output: {
-      filename: "[name].js",
+      filename: "assets/js/[name].js",
       path: path.join(CWD, buildOptions.distDirname),
+      publicPath: undefined,
     },
-    plugins: [new EofolPlugin(), buildOptions.analyze && new BundleAnalyzerPlugin()].filter(Boolean),
+    plugins: [new EofolPlugin(), buildOptions.analyze && new BundleAnalyzerPlugin(), new Dotenv()].filter(Boolean),
     module: {
       rules: [
         {
-          test: /\.ts?$/,
-          use: {
-            loader: "ts-loader",
-            options: {
-              transpileOnly: true,
-            },
+          test: /\.([cm]?ts|tsx)$/,
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
           },
           exclude: /node_modules/,
         },
       ],
     },
     resolve: {
-      extensions: [".ts", ".js"],
+      extensions: [".ts", ".tsx", ".js", ".jsx"],
     },
     devtool: buildOptions.sourceMap ? "source-map" : false,
+    infrastructureLogging: {
+      appendOnly: true,
+      level: "error",
+    },
+    stats: "none",
   }
 }
