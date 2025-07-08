@@ -15,7 +15,10 @@ const setRoot = (rootId: string) => {
 // eslint-disable-next-line no-unused-vars
 const renderEofolInternal = (args: RenderUpdateArgs) => {
   const root = getRoot()
-  const dom = traverseVdom(traversePreVdom(getVdom()))
+  const vdom = traversePreVdom(getVdom())
+  //  console.log(vdom)
+  const dom = traverseVdom(vdom)
+  // console.log(dom)
   if (root) {
     arrayCombinator(dom, (item) => {
       appendToDom(root, item)

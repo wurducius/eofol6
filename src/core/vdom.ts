@@ -1,5 +1,7 @@
-import { arrayCombinator, isString } from "../util"
+import { arrayCombinator, isString, mapCombinator } from "../util"
 import { VDOMItem } from "../types"
+import { getArgs } from "./lifecycle"
+import { getDef } from "./internal"
 
 const renderTagDom = (vdom: VDOMItem) => {
   const element = document.createElement(vdom.tag)
@@ -37,13 +39,38 @@ export const traverseVdom = (vdom) => {
   } else if (isString(vdom)) {
     return vdom
   } else {
-    const visited = renderTagDom(vdom)
+    let visited
+    if (vdom.type === "custom") {
+      const def = getDef(vdom.tag)
+      const args = getArgs({ def, vdom })
+      visited = traverseVdom(def.render(args).render())
+    } else {
+      visited = renderTagDom(vdom)
+    }
     if (visited && vdom?.children) {
       arrayCombinator(vdom.children, (child) => {
-        const visitedChild = traverseVdom(child)
+        const visitedChild = traverseVdom(child?.render ? child.render() : child)
         appendToDom(visited, visitedChild)
       })
     }
     return visited
+  }
+}
+
+export const traversePreVdom = (prevdom: undefined | false | string | { render: () => VDOMItem; key: string }) => {
+  if (prevdom === undefined || prevdom === false) {
+    return undefined
+  } else if (isString(prevdom)) {
+    return prevdom
+  } else {
+    const rendered = prevdom.render()
+    // @TODO place after update dom
+    //     const args = getArgs({ vdom: rendered, def })
+    //     Lifecycle.afterRender({ def, args })
+    //   }
+    if (rendered !== undefined && !isString(rendered) && Array.isArray(rendered.children)) {
+      rendered.children = mapCombinator(rendered.children, traversePreVdom)
+    }
+    return rendered
   }
 }
