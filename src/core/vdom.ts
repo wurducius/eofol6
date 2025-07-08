@@ -1,6 +1,6 @@
 import { arrayCombinator, isString, mapCombinator } from "../util"
 import { VDOMItem } from "../types"
-import { getArgs } from "./lifecycle"
+import { getArgs, Lifecycle } from "./lifecycle"
 import { getDef } from "./internal"
 
 const renderTagDom = (vdom: VDOMItem) => {
@@ -49,8 +49,16 @@ export const traverseVdom = (vdom) => {
     }
     if (visited && vdom?.children) {
       arrayCombinator(vdom.children, (child) => {
-        const visitedChild = traverseVdom(child?.render ? child.render() : child)
+        const childVdom = child?.render ? child.render() : child
+        const visitedChild = traverseVdom(childVdom)
         appendToDom(visited, visitedChild)
+        if (childVdom && childVdom.type === "custom") {
+          const def = getDef(childVdom.tag)
+          if (def && def.effect) {
+            const args = getArgs({ vdom: childVdom, def })
+            Lifecycle.afterRender({ def, args })
+          }
+        }
       })
     }
     return visited
