@@ -16,9 +16,7 @@ const setRoot = (rootId: string) => {
 const renderEofolInternal = (args: RenderUpdateArgs) => {
   const root = getRoot()
   const vdom = traversePreVdom(getVdom())
-  //  console.log(vdom)
   const dom = traverseVdom(vdom)
-  // console.log(dom)
   if (root) {
     arrayCombinator(dom, (item) => {
       appendToDom(root, item)

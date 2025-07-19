@@ -91,6 +91,10 @@ body {
   margin-right: 16px;
 }
 
+.mt-2 {
+  margin-top: 16px;
+}
+
 .td-container {
   width: 240px;
 }

@@ -9,15 +9,19 @@ import {
   forceUpdateEofol,
   h1,
   h2,
+  spinner,
+  hasData,
   input,
+  isLoading,
   mergeStore,
   mountEofol,
   resetStore,
   row,
   selector,
   setStore,
+  useReq,
 } from "../src"
-import { getRandomString, useReq } from "./util"
+import { getRandomString, useGeolocation } from "./util"
 import { eButton, eContainer } from "./e-ui"
 import { notifyError } from "./notification"
 import { sx } from "eofol-sx"
@@ -44,10 +48,16 @@ define("counter", {
       <h2>State test</h2>,
       // @ts-ignore
       center(`Clicked ${args.state.count} times`),
-      eButton("Click", () => {
-        // @ts-ignore
-        args.setState({ count: args.state.count + 1 })
-      }),
+      row([
+        eButton("+", () => {
+          // @ts-ignore
+          args.setState({ count: args.state.count + 1 })
+        }),
+        eButton("-", () => {
+          // @ts-ignore
+          args.setState({ count: args.state.count - 1 })
+        }),
+      ]),
       eButton("Clear", () => {
         args.setState({ count: 0 })
       }),
@@ -78,34 +88,41 @@ define("propsTestContainer", {
     ]),
 })
 
-const PLACEHOLDER_LAT = "50.075"
-const PLACEHOLDER_LON = "14.437"
-const URL_AIR_QUALITY = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${PLACEHOLDER_LAT}&longitude=${PLACEHOLDER_LON}&hourly=pm10,pm2_5&current=european_aqi,us_aqi,pm10,carbon_monoxide,pm2_5,nitrogen_dioxide,sulphur_dioxide,ozone,aerosol_optical_depth,dust,uv_index,uv_index_clear_sky,ammonia,alder_pollen,grass_pollen,birch_pollen,mugwort_pollen,ragweed_pollen,olive_pollen`
-
 define("air", {
-  state: { aqi: undefined },
-  render: (args) =>
-    // @ts-ignore
-    col([
+  state: { aqi: undefined, lat: undefined, lon: undefined },
+  render: (args) => {
+    const hasCoords = args.state.lat !== undefined && args.state.lon !== undefined
+    const isGood = hasCoords && hasData(args.state.aqi)
+    return col([
       <h2>Effect test: Air</h2>,
-      args.state.aqi !== undefined && <div>Successfully fetched air quality data.</div>,
-      args.state.aqi !== undefined && <div>{`AQI: ${args.state.aqi}`}</div>,
-    ]),
+      isGood && col([<div>Successfully fetched air quality data.</div>, <div>{`AQI: ${args.state.aqi}`}</div>]),
+      isLoading(args.state.aqi) && col([<div>Fetching air quality data...</div>, spinner("mt-2")]),
+      !hasCoords && col([<div>Acquiring GPS coordinates using Geolocation...</div>, spinner("mt-2")]),
+    ])
+  },
   effect: [
     (args) => {
-      // @ts-ignore
-      useReq(
-        { url: URL_AIR_QUALITY },
-        args.state.aqi,
-        (next) => {
-          args.mergeState({ aqi: next })
-        },
-        (next) => {
-          if (next?.current?.european_aqi) {
-            return next.current.european_aqi
-          }
-        },
-      )
+      const hasCoords = args.state.lat !== undefined && args.state.lon !== undefined
+      if (hasCoords) {
+        const URL_AIR_QUALITY = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${args.state.lat}&longitude=${args.state.lon}&hourly=pm10,pm2_5&current=european_aqi,us_aqi,pm10,carbon_monoxide,pm2_5,nitrogen_dioxide,sulphur_dioxide,ozone,aerosol_optical_depth,dust,uv_index,uv_index_clear_sky,ammonia,alder_pollen,grass_pollen,birch_pollen,mugwort_pollen,ragweed_pollen,olive_pollen`
+        // @ts-ignore
+        useReq(
+          { url: URL_AIR_QUALITY },
+          args.state.aqi,
+          (next) => {
+            args.mergeState({ aqi: next })
+          },
+          (next) => {
+            if (next?.current?.european_aqi) {
+              return next.current.european_aqi
+            }
+          },
+        )
+      } else {
+        useGeolocation().then((coords) => {
+          args.mergeState({ lat: coords.lat, lon: coords.lon })
+        })
+      }
       return () => {}
     },
   ],
