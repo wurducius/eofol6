@@ -82,7 +82,11 @@ define("air", {
   state: { aqi: undefined },
   render: (args) =>
     // @ts-ignore
-    col([<h2>Effect test: Air</h2>, args.state.aqi !== undefined && <div>{`AQI: ${args.state.aqi}`}</div>]),
+    col([
+      <h2>Effect test: Air</h2>,
+      args.state.aqi !== undefined && <div>Successfully fetched air quality data.</div>,
+      args.state.aqi !== undefined && <div>{`AQI: ${args.state.aqi}`}</div>,
+    ]),
   effect: [
     (args) => {
       // @ts-ignore
@@ -98,6 +102,9 @@ define("air", {
             if (data?.current?.european_aqi) {
               args.mergeState({ aqi: data.current.european_aqi })
             }
+          })
+          .catch((ex) => {
+            console.log(ex)
           })
       }
       return () => {}

@@ -1,6 +1,6 @@
 import ConfigRuntime from "../../config-runtime"
 import { logProfiler } from "./log"
-import { PROFILER_PRECISION_DIGITS } from "../constants"
+import { PROFILER_PRECISION_DIGITS } from "../../constants"
 
 export const prettyTime = (ms: number) => {
   let seconds = Number((ms / 1000).toFixed(1))

@@ -54,7 +54,7 @@ export const traverseVdom = (vdom) => {
         appendToDom(visited, visitedChild)
         if (childVdom && childVdom.type === "custom") {
           const def = getDef(childVdom.tag)
-          if (def && def.effect) {
+          if (def?.effect) {
             const args = getArgs({ vdom: childVdom, def })
             Lifecycle.afterRender({ def, args })
           }
@@ -72,10 +72,6 @@ export const traversePreVdom = (prevdom: undefined | false | string | { render: 
     return prevdom
   } else {
     const rendered = prevdom.render()
-    // @TODO place after update dom
-    //     const args = getArgs({ vdom: rendered, def })
-    //     Lifecycle.afterRender({ def, args })
-    //   }
     if (rendered !== undefined && !isString(rendered) && Array.isArray(rendered.children)) {
       rendered.children = mapCombinator(rendered.children, traversePreVdom)
     }
