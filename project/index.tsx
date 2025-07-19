@@ -9,10 +9,7 @@ import {
   forceUpdateEofol,
   h1,
   h2,
-  spinner,
-  hasData,
   input,
-  isLoading,
   mergeStore,
   mountEofol,
   resetStore,
@@ -89,17 +86,14 @@ define("propsTestContainer", {
 })
 
 define("air", {
-  state: { aqi: undefined, lat: undefined, lon: undefined },
-  render: (args) => {
-    const hasCoords = args.state.lat !== undefined && args.state.lon !== undefined
-    const isGood = hasCoords && hasData(args.state.aqi)
-    return col([
+  state: { aqi: undefined },
+  render: (args) =>
+    // @ts-ignore
+    col([
       <h2>Effect test: Air</h2>,
-      isGood && col([<div>Successfully fetched air quality data.</div>, <div>{`AQI: ${args.state.aqi}`}</div>]),
-      isLoading(args.state.aqi) && col([<div>Fetching air quality data...</div>, spinner("mt-2")]),
-      !hasCoords && col([<div>Acquiring GPS coordinates using Geolocation...</div>, spinner("mt-2")]),
-    ])
-  },
+      args.state.aqi !== undefined && <div>Successfully fetched air quality data.</div>,
+      args.state.aqi !== undefined && <div>{`AQI: ${args.state.aqi}`}</div>,
+    ]),
   effect: [
     (args) => {
       const hasCoords = args.state.lat !== undefined && args.state.lon !== undefined
