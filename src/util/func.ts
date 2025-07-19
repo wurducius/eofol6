@@ -1,11 +1,14 @@
-// eslint-disable-next-line no-unused-vars
-export function arrayCombinator<T>(items: T | T[] | undefined, handler: (_next: T) => void) {
+export function arrayCombinator<T>(
+  items: T | T[] | undefined,
+  // eslint-disable-next-line no-unused-vars
+  handler: (_next: T, _index: number | undefined) => void,
+) {
   if (Array.isArray(items)) {
-    items.forEach((item) => {
-      handler(item)
+    items.forEach((item, index) => {
+      handler(item, index)
     })
   } else if (items) {
-    handler(items)
+    handler(items, undefined)
   }
 }
 
