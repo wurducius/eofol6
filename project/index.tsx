@@ -9,15 +9,18 @@ import {
   forceUpdateEofol,
   h1,
   h2,
+  hasData,
   input,
+  isLoading,
   mergeStore,
   mountEofol,
   resetStore,
   row,
   selector,
   setStore,
+  useReq,
 } from "../src"
-import { getRandomString, useReq } from "./util"
+import { getRandomString } from "./util"
 import { eButton, eContainer } from "./e-ui"
 import { notifyError } from "./notification"
 import { sx } from "eofol-sx"
@@ -78,19 +81,33 @@ define("propsTestContainer", {
     ]),
 })
 
+/*
+let PLACEHOLDER_LAT = undefined
+let PLACEHOLDER_LON = undefined
+
+if (PLACEHOLDER_LAT === undefined || PLACEHOLDER_LON === undefined) {
+  navigator.geolocation.getCurrentPosition((position) => {
+    PLACEHOLDER_LAT = position.coords.latitude
+    PLACEHOLDER_LON = position.coords.longitude
+  })
+}
+*/
 const PLACEHOLDER_LAT = "50.075"
 const PLACEHOLDER_LON = "14.437"
+
 const URL_AIR_QUALITY = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${PLACEHOLDER_LAT}&longitude=${PLACEHOLDER_LON}&hourly=pm10,pm2_5&current=european_aqi,us_aqi,pm10,carbon_monoxide,pm2_5,nitrogen_dioxide,sulphur_dioxide,ozone,aerosol_optical_depth,dust,uv_index,uv_index_clear_sky,ammonia,alder_pollen,grass_pollen,birch_pollen,mugwort_pollen,ragweed_pollen,olive_pollen`
 
 define("air", {
   state: { aqi: undefined },
-  render: (args) =>
-    // @ts-ignore
-    col([
+  render: (args) => {
+    const isGood = hasData(args.state.aqi)
+    return col([
       <h2>Effect test: Air</h2>,
-      args.state.aqi !== undefined && <div>Successfully fetched air quality data.</div>,
-      args.state.aqi !== undefined && <div>{`AQI: ${args.state.aqi}`}</div>,
-    ]),
+      isGood && <div>Successfully fetched air quality data.</div>,
+      isGood && <div>{`AQI: ${args.state.aqi}`}</div>,
+      isLoading(args.state.aqi) && <div class="spinner" />,
+    ])
+  },
   effect: [
     (args) => {
       // @ts-ignore
