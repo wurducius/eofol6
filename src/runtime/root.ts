@@ -1,5 +1,5 @@
 import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "../util"
-import { appendToDom, getVdom, setVdom, traversePreVdom, traverseVdom } from "../core"
+import { appendToDom, getPrevdom, getVdom, setPrevdom, setVdom, traversePreVdom, traverseVdom } from "../core"
 import { RenderUpdateArgs, VDOMItem } from "../types"
 import { initEofol } from "./init"
 
@@ -15,8 +15,10 @@ const setRoot = (rootId: string) => {
 // eslint-disable-next-line no-unused-vars
 const renderEofolInternal = (args: RenderUpdateArgs) => {
   const root = getRoot()
-  const vdom = traversePreVdom(getVdom())
-  const dom = traverseVdom(vdom)
+  const vdom = traversePreVdom(getPrevdom())
+  const lastVdom = getVdom()
+  const dom = traverseVdom(vdom, lastVdom)
+  setVdom(vdom)
   if (root) {
     arrayCombinator(dom, (item) => {
       appendToDom(root, item)
@@ -48,7 +50,7 @@ export const mountEofol = (rootId: string, vdom: () => VDOMItem) => {
   profilerStart("mount")
   const root = setRoot(rootId)
   if (root) {
-    setVdom(vdom)
+    setPrevdom(vdom)
     renderEofolInternal({ update: "mount" })
     initEofol()
   }
