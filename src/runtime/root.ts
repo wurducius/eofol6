@@ -1,15 +1,5 @@
 import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "../util"
-import {
-  appendToDom,
-  getDefs,
-  getInstances,
-  getPrevdom,
-  getVdom,
-  setPrevdom,
-  setVdom,
-  traversePreVdom,
-  traverseVdom,
-} from "../core"
+import { appendToDom, getDefs, getPrevdom, getVdom, setPrevdom, setVdom, traversePreVdom, traverseVdom } from "../core"
 import { RenderUpdateArgs, VDOMItem } from "../types"
 import { initEofol } from "./init"
 
@@ -89,12 +79,12 @@ export const updateEofol = (args: RenderUpdateArgs) => {
         const def = defs[defKey]
         return def.subscribe && (def.subscribe === subscribe || def.subscribe.includes(subscribe))
       })
-      renderEofolTargeted(subscribedDefKeys)
+      //  renderEofolTargeted(subscribedDefKeys)
     } else {
       const key = args.key
-      renderEofolTargeted(key)
+      //   renderEofolTargeted(key)
     }
-    // renderEofolInternal(args)
+    renderEofolInternal(args)
   }
   profilerEnd("update", "Update")
 }
