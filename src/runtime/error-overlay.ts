@@ -1,7 +1,7 @@
 const ERROR_OVERLAY_ENABLED = true
 
-const ERROR_OVERLAY_BG_COLOR = "#330a0a"
-const ERROR_OVERLAY_FONT_COLOR = "#e70404ff"
+const ERROR_OVERLAY_BG_COLOR = "#000000"
+const ERROR_OVERLAY_FONT_COLOR = "#f70e0eff"
 const ERROR_OVERLAY_CONTAINER_WIDTH = 640
 const ERROR_OVERLAY_CONTAINER_PADDING = 64
 const ERROR_OVERLAY_CONTAINER_PADDING_SMALL = 16
@@ -17,7 +17,7 @@ const headerStyle = `font-size: ${ERROR_OVERLAY_HEADER_FONT_SIZE}px; margin-bott
 const headerContentStyle = `font-size: ${ERROR_OVERLAY_HEADER_FONT_SIZE}px; margin-bottom: ${ERROR_OVERLAY_HEADER_MARGIN}px; font-weight: ${ERROR_OVERLAY_HEADER_CONTENT_FONT_WEIGHT};`
 const stacktraceStyle = `font-size: ${ERROR_OVERLAY_STACKTRACE_FONT_SIZE}px;`
 
-const headerMsg = "Eofol compilation error:"
+const headerMsg = "Eofol runtime error:"
 
 const appendDiv = (parent: Element, innerHtml?: string, style?: string) => {
   const header = document.createElement("div")
@@ -37,7 +37,7 @@ export const withErrorOverlay = (handler: () => void) => {
       handler()
     } catch (ex) {
       const stacktraceMsg = `${ex.stack ? `Stacktrace: ${ex.stack}` : ""}`
-      console.error(`${headerMsg} ${ex.message}- ${stacktraceMsg}`)
+      console.log(`${headerMsg} ${ex.message}- ${stacktraceMsg}`)
       const large = window.screen.width >= 640
       const root = document.getElementById("root")
       if (root) {
