@@ -16,7 +16,7 @@ export const h6 = (children: Children) => createElement("h6", undefined, childre
 export const code = (children: Children, attributes?: Attributes) => createElement("code", attributes, children)
 export const pre = (children: Children, attributes?: Attributes) => createElement("pre", attributes, children)
 
-export const img = (properties: Properties, attributes: Attributes) =>
+export const img = (attributes: Attributes, properties: Properties) =>
   createElement("img", attributes, undefined, properties)
 
 export const button = (children: Children, properties: Properties, attributes: Attributes) =>

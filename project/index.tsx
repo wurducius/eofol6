@@ -20,6 +20,7 @@ import {
   spinner,
   isLoading,
   useReq,
+  img,
 } from "../src"
 import { getRandomString, useGeolocation } from "./util"
 import { eButton, eContainer } from "./e-ui"
@@ -274,10 +275,13 @@ define("childrenPropTest", {
   },
 })
 
+const LOGO_SIZE = 256
+
 mountEofol(
   "root",
   container([
     <h1>Eofol6</h1>,
+    img({ src: "./assets/media/images/logo-lg.png", alt: "Eofol logo", height: LOGO_SIZE, width: LOGO_SIZE }),
     <rand />,
     <counter />,
     <propsTestContainer />,
