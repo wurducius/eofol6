@@ -1,18 +1,15 @@
 const path = require("path")
 const fs = require("node:fs")
-const { addAsset, CWD } = require("./plugin-util.cjs")
-const { injectFonts } = require("../compile/inject-fonts.cjs")
+const { addAsset, publicPath, projectPath, stylesPath } = require("./plugin-util.cjs")
+const injectFonts = require("../compile/inject-fonts.cjs")
 
 const MARKER_STYLE_TAG_END = "</head>"
 
 const stylePaths = [
-  path.join(CWD, "resources", "styles", "theme.css"),
-  path.join(CWD, "resources", "styles", "base.css"),
-  path.join(CWD, "resources", "styles", "simple.css"),
+  path.join(stylesPath, "theme.css"),
+  path.join(stylesPath, "base.css"),
+  path.join(stylesPath, "simple.css"),
 ]
-
-const publicPath = path.join(CWD, "public")
-const projectPath = path.join(CWD, "project")
 
 const getViewPath = (view) => path.join(publicPath, `${view}.html`)
 const getStylesheetPath = (view) => path.join(projectPath, `${view}.css`)

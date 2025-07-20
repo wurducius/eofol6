@@ -37,6 +37,7 @@ const matchTree = (parent, matcher, callback) => {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 const renderEofolTargeted = (keys: string | string[]) => {
   arrayCombinator(keys, (key) => {
     const lastVdom = getVdom()
@@ -76,12 +77,14 @@ export const updateEofol = (args: RenderUpdateArgs) => {
     if (isStoreUpdate) {
       const subscribe = args.subscribe
       const defs = getDefs()
+      // eslint-disable-next-line no-unused-vars
       const subscribedDefKeys = Object.keys(defs).filter((defKey) => {
         const def = defs[defKey]
         return def.subscribe && (def.subscribe === subscribe || def.subscribe.includes(subscribe))
       })
       //  renderEofolTargeted(subscribedDefKeys)
     } else {
+      // eslint-disable-next-line no-unused-vars
       const key = args.key
       //   renderEofolTargeted(key)
     }

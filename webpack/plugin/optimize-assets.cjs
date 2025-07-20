@@ -1,12 +1,14 @@
 const { addAsset } = require("./plugin-util.cjs")
 const minifyHtml = require("../compile/minify-html.cjs")
 const minifyJs = require("../compile/minify-js.cjs")
-const { injectSw } = require("../compile/inject-sw.cjs")
+const injectSw = require("../compile/inject-sw.cjs")
 
 const processAsset = (compilation) => async (assetName, transform) => {
-  const content = compilation.assets[assetName].source()
-  const processed = transform !== undefined ? await transform(content) : content
-  addAsset(compilation, assetName, processed, {}, true)
+  if (!compilation.assets[assetName]?.info?.optimized) {
+    const content = compilation.assets[assetName].source()
+    const processed = transform !== undefined ? await transform(content) : content
+    addAsset(compilation, assetName, processed, { ...compilation.assets[assetName].info, optimized: true }, true)
+  }
 }
 
 const minifyAssets = (compilation) => {

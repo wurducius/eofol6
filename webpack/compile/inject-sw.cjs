@@ -1,13 +1,6 @@
 const fs = require("node:fs")
-const path = require("path")
-const { addAsset, CWD } = require("../plugin/plugin-util.cjs")
+const { addAsset, publicPath, swPath, transformPathToHtml } = require("../plugin/plugin-util.cjs")
 const { SW_FILENAME, SW_FILES_MARKER } = require("../../constants.js")
-
-const resourcesPath = path.join(CWD, "resources")
-const publicPath = path.join(CWD, "public")
-const swPath = path.join(resourcesPath, SW_FILENAME)
-
-const transformPathToHtml = (item) => item.replaceAll(path.sep, "/")
 
 const injectSw = (compilation) =>
   fs.promises.readFile(swPath).then(async (swContent) => {
@@ -20,4 +13,4 @@ const injectSw = (compilation) =>
     })
   })
 
-module.exports = { injectSw }
+module.exports = injectSw
