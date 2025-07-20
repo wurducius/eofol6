@@ -2,6 +2,7 @@ import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from ".
 import { appendToDom, getDefs, getPrevdom, getVdom, setPrevdom, setVdom, traversePreVdom, traverseVdom } from "../core"
 import { RenderUpdateArgs, VDOMItem } from "../types"
 import { initEofol } from "./init"
+import { withErrorOverlay } from "./error-overlay"
 
 let rootInternal: HTMLElement | null
 
@@ -94,8 +95,10 @@ export const mountEofol = (rootId: string, vdom: () => VDOMItem) => {
   const root = setRoot(rootId)
   if (root) {
     setPrevdom(vdom)
-    renderEofolInternal({ update: "mount" })
-    initEofol()
+    withErrorOverlay(() => {
+      renderEofolInternal({ update: "mount" })
+      initEofol()
+    })
   }
   profilerEnd("mount", "Mount")
 }
