@@ -58,22 +58,22 @@ h6 {
 a {
   font-size: 1rem;
   text-decoration: none;
-  font-family: Roboto, sans-serif;
+  font-family: inherit;
 }
 
 button {
-  font-family: Roboto, sans-serif;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
 }
 
 textarea {
-  font-family: Roboto, sans-serif;
+  font-family: inherit;
   font-size: 14px;
 }
 
 select {
-  font-family: Roboto, sans-serif;
+  font-family: inherit;
   font-size: 14px;
 }
 
@@ -85,7 +85,7 @@ input {
   color: #d4d4d4;
   height: 40px;
   line-height: 1.25rem;
-  font-family: Roboto, sans-serif;
+  font-family: inherit;
   font-size: 14px;
   outline: 0;
   border-radius: 4px;

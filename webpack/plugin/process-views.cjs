@@ -36,8 +36,12 @@ const processViews = async (compiler, compilation) => {
           return injectFonts({
             path: "Roboto-Regular.woff2",
             fontFamily: "Roboto",
+            fontFamilyFallback: "sans-serif",
             format: "woff2",
-            isInline: true,
+            isInline: false,
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontDisplay: "swap",
           }).then((fontFace) => {
             const headNext = `${headOld}<meta name="description" content="${description}"><style>${fontFace} ${styles}</style>`
             return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
