@@ -44,7 +44,7 @@ export const traverseVdom = (vdom, lastVdom) => {
       const def = getDef(vdom.tag)
       const args = getArgs({ def, vdom })
       // console.log(`(R) ${vdom.tag} -> ${lastVdom === undefined ? "LAST" : "FIRST"}`)
-      console.log(vdom, lastVdom, document.getElementById(vdom.key))
+      // console.log(vdom, lastVdom, document.getElementById(vdom.key))
       if (
         lastVdom !== undefined &&
         vdom !== undefined &&
