@@ -1,6 +1,7 @@
-import path from "path"
-import fs from "node:fs"
-import { addAsset, CWD } from "./plugin-util.cjs"
+const path = require("path")
+const fs = require("node:fs")
+const { addAsset, CWD } = require("./plugin-util.cjs")
+const { injectFonts } = require("../compile/inject-fonts.cjs")
 
 const MARKER_STYLE_TAG_END = "</head>"
 
@@ -16,9 +17,7 @@ const projectPath = path.join(CWD, "project")
 const getViewPath = (view) => path.join(publicPath, `${view}.html`)
 const getStylesheetPath = (view) => path.join(projectPath, `${view}.css`)
 
-const bytesToBase64 = (bytes) => btoa(Array.from(bytes, (byte) => String.fromCodePoint(byte)).join(""))
-
-export const processViews = async (compiler, compilation) => {
+const processViews = async (compiler, compilation) => {
   const views = (await fs.promises.readdir(publicPath, { recursive: true }))
     .filter((filename) => filename.endsWith(".html"))
     .map((filename) => filename.substring(0, filename.lastIndexOf(".")) || filename)
@@ -37,13 +36,12 @@ export const processViews = async (compiler, compilation) => {
             .map((stylePath) => fs.readFileSync(stylePath).toString())
             .join(" ")
 
-          return fs.promises.readFile(path.join(CWD, "resources", "Roboto-Regular.woff2")).then((fontData) => {
-            const fontFace = `@font-face {
-              font-family: "Roboto";
-              font-style: normal;
-              font-weight: 400;
-              font-display: swap;
-              src: url('data:font/woff3; base64,${bytesToBase64(Uint8Array.from(fontData))}') format("woff2"); }`
+          return injectFonts({
+            path: "Roboto-Regular.woff2",
+            fontFamily: "Roboto",
+            format: "woff2",
+            isInline: true,
+          }).then((fontFace) => {
             const headNext = `${headOld}<meta name="description" content="${description}"><style>${fontFace} ${styles}</style>`
             return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
           })
@@ -54,3 +52,5 @@ export const processViews = async (compiler, compilation) => {
     }),
   )
 }
+
+module.exports = { processViews }

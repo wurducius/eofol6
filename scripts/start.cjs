@@ -1,8 +1,8 @@
-import Webpack from "webpack"
-import WebpackDevServer from "webpack-dev-server"
-import getWebpackConfigImport from "../webpack/webpack.config.cjs"
-import { error, getArgv, logEofolScript, primary } from "./impl/util.js"
-import ConfigCompile from "../config-compile.js"
+const Webpack = require("webpack")
+const WebpackDevServer = require("webpack-dev-server")
+const getWebpackConfigImport = require("../webpack/webpack.config.cjs")
+const { error, getArgv, logEofolScript, primary } = require("./impl/util.cjs")
+const ConfigCompile = require("../config-compile.cjs")
 
 const getWebpackConfig = getWebpackConfigImport.default
 

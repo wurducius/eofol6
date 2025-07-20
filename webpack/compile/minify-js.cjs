@@ -1,4 +1,4 @@
-import { minify } from "uglify-js"
+const { minify } = require("uglify-js")
 
 const uglifyOptions = {
   parse: {},
@@ -11,4 +11,4 @@ const uglifyOptions = {
 
 const minifyJs = (content) => minify(content, uglifyOptions).code
 
-export default minifyJs
+module.exports = minifyJs

@@ -1,4 +1,5 @@
-import "dotenv/config"
+// eslint-disable-next-line no-unused-vars
+const dotenvConfig = require("dotenv/config")
 
 const envBoolean = (name, defaultValue) => {
   if (defaultValue) {
@@ -40,4 +41,4 @@ const ConfigCompile = {
   ENTRY_FILENAME: envString("ENTRY_FILENAME", "index.html"),
 }
 
-export default ConfigCompile
+module.exports = ConfigCompile

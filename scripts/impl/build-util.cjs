@@ -1,22 +1,22 @@
-import fs from "node:fs"
-import path from "path"
-import webpack from "webpack"
-import getWebpackConfigImport from "../../webpack/webpack.config.cjs"
-import { PATH } from "./util.js"
-import ConfigCompile from "../../config-compile.js"
+const fs = require("node:fs")
+const path = require("path")
+const webpack = require("webpack")
+const getWebpackConfigImport = require("../../webpack/webpack.config.cjs")
+const { PATH } = require("./util.cjs")
+const ConfigCompile = require("../../config-compile.cjs")
 
 const productionOptions = { mode: "production", sourceMap: false }
 
 const getWebpackConfig = getWebpackConfigImport.default
 const webpackConfig = getWebpackConfig(productionOptions)
 
-export const touch = (path) => {
+const touch = (path) => {
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive: true })
   }
 }
 
-export const touchBuildDirs = () => {
+const touchBuildDirs = () => {
   const paths = [
     PATH.assetsPath,
     PATH.jsPath,
@@ -31,7 +31,7 @@ export const touchBuildDirs = () => {
   })
 }
 
-export const copyPublicDir = (source, target) => {
+const copyPublicDir = (source, target) => {
   return fs.promises.readdir(source, { recursive: true }).then((dir) =>
     Promise.all(
       dir.map((file) => {
@@ -46,7 +46,7 @@ export const copyPublicDir = (source, target) => {
   )
 }
 
-export const buildWebpack = (onSuccess, onError) => {
+const buildWebpack = (onSuccess, onError) => {
   return webpack(webpackConfig, (err, stats) => {
     if (err || stats.hasErrors()) {
       if (onError) {
@@ -60,3 +60,5 @@ export const buildWebpack = (onSuccess, onError) => {
     }
   })
 }
+
+module.exports = { touch, touchBuildDirs, copyPublicDir, buildWebpack }

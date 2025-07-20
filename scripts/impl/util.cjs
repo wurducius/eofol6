@@ -1,24 +1,24 @@
-import chalk from "chalk"
-import path from "path"
-import fs from "node:fs"
-import ConfigCompile from "../../config-compile.js"
+const chalk = require("chalk")
+const path = require("path")
+const fs = require("node:fs")
+const ConfigCompile = require("../../config-compile.cjs")
 
-export const primary = chalk.cyan
-export const success = chalk.green
-export const error = chalk.red
+const primary = chalk.cyan
+const success = chalk.green
+const error = chalk.red
 
-export const logEofolScript = (name) => {
+const logEofolScript = (name) => {
   if (ConfigCompile.VERBOSE_COMPILE) {
     console.log(primary(`======= Eofol6 ${name} =======`))
   }
 }
 
-export const prettySize = (size) => {
+const prettySize = (size) => {
   const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024))
   return `${(size / Math.pow(1024, i)).toFixed(2) * 1} ${["B", "kB", "MB", "GB", "TB"][i]}`
 }
 
-export const prettyTime = (ms) => {
+const prettyTime = (ms) => {
   let seconds = (ms / 1000).toFixed(1)
   let minutes = (ms / (1000 * 60)).toFixed(1)
   let hours = (ms / (1000 * 60 * 60)).toFixed(1)
@@ -30,13 +30,13 @@ export const prettyTime = (ms) => {
   else return `${days} Days`
 }
 
-export const dirSize = async (directory) => {
+const dirSize = async (directory) => {
   const files = await fs.promises.readdir(directory, { recursive: true })
   const stats = files.map((file) => fs.promises.stat(path.join(directory, file)))
   return (await Promise.all(stats)).reduce((accumulator, { size }) => accumulator + size, 0)
 }
 
-export const getArgv = (args) => {
+const getArgv = (args) => {
   const argv = process.argv
   let argForce = false
   if (argv.length >= 2) {
@@ -51,7 +51,7 @@ export const getArgv = (args) => {
   return argForce
 }
 
-export const spawnOptions = {
+const spawnOptions = {
   encoding: "utf8",
   cwd: process.cwd(),
   env: process.env,
@@ -71,7 +71,7 @@ const fontsPath = path.join(mediaPath, "fonts")
 const imagesPath = path.join(mediaPath, "images")
 const iconsPath = path.join(mediaPath, "icons")
 
-export const PATH = {
+const PATH = {
   CWD,
   publicPath,
   distDirname,
@@ -83,4 +83,17 @@ export const PATH = {
   fontsPath,
   imagesPath,
   iconsPath,
+}
+
+module.exports = {
+  primary,
+  error,
+  success,
+  logEofolScript,
+  prettySize,
+  prettyTime,
+  dirSize,
+  getArgv,
+  spawnOptions,
+  PATH,
 }

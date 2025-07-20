@@ -1,6 +1,6 @@
-import { execSync } from "child_process"
-import { join } from "path"
-import { error, logEofolScript, PATH, primary, spawnOptions, success } from "./impl/util.js"
+const { execSync } = require("child_process")
+const { join } = require("path")
+const { error, logEofolScript, PATH, primary, spawnOptions, success } = require("./impl/util.cjs")
 
 logEofolScript("deploy")
 

@@ -1,7 +1,7 @@
-import { addAsset } from "./plugin-util.cjs"
-import minifyHtml from "../compile/minify-html.js"
-import minifyJs from "../compile/minify-js.js"
-import { injectSw } from "../compile/inject-sw.js"
+const { addAsset } = require("./plugin-util.cjs")
+const minifyHtml = require("../compile/minify-html.cjs")
+const minifyJs = require("../compile/minify-js.cjs")
+const { injectSw } = require("../compile/inject-sw.cjs")
 
 const processAsset = (compilation) => async (assetName, transform) => {
   const content = compilation.assets[assetName].source()
@@ -22,7 +22,9 @@ const minifyAssets = (compilation) => {
   )
 }
 
-export const optimizeAssets = async (compiler, compilation) => {
+const optimizeAssets = async (compiler, compilation) => {
   await injectSw(compilation)
   minifyAssets(compilation)
 }
+
+module.exports = { optimizeAssets }

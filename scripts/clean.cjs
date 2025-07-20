@@ -1,5 +1,5 @@
-import { rimraf } from "rimraf"
-import { error, logEofolScript, PATH, success } from "./impl/util.js"
+const { rimraf } = require("rimraf")
+const { error, logEofolScript, PATH, success } = require("./impl/util.cjs")
 
 const clean = () => {
   rimraf.rimrafSync(PATH.distPath)
