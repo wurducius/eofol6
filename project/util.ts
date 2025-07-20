@@ -5,3 +5,13 @@ const getRandomStringImpl = (length: number) => () =>
     .join("")
 
 export const getRandomString = getRandomStringImpl(17)
+
+export const useGeolocation = () =>
+  new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      resolve({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+      })
+    })
+  })

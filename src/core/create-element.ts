@@ -12,9 +12,9 @@ export const createElement = (
   return {
     render: () => ({
       tag,
-      props: type === "custom" ? attributes : {},
+      props: type === "custom" ? { ...(attributes ?? {}), id: key } : {},
       children: typeof children === "object" || Array.isArray(children) ? children : children?.toString(),
-      attributes,
+      attributes: { ...(attributes ?? {}), id: key },
       properties,
       key,
       type,

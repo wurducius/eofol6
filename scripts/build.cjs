@@ -1,7 +1,6 @@
-import { logEofolScript, error, prettySize, prettyTime, success, dirSize, PATH } from "./impl/util.js"
-import { buildWebpack, copyPublicDir, touchBuildDirs } from "./impl/build-util.js"
-import ConfigCompile from "../config-compile.js"
-
+const { logEofolScript, error, prettySize, prettyTime, success, dirSize, PATH } = require("./impl/util.cjs")
+const { buildWebpack, copyPublicDir, touchBuildDirs } = require("./impl/build-util.cjs")
+const ConfigCompile = require("../config-compile.cjs")
 const { VERBOSE_COMPILE, PROFILER_COMPILE } = ConfigCompile
 
 const build = () => {

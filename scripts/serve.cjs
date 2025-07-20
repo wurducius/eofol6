@@ -1,6 +1,6 @@
-import { execSync } from "child_process"
-import { logEofolScript } from "./impl/util.js"
-import ConfigCompile from "../config-compile.js"
+const { execSync } = require("child_process")
+const { logEofolScript } = require("./impl/util.cjs")
+const ConfigCompile = require("../config-compile.cjs")
 
 const serveOptions = {
   open: ConfigCompile.OPEN,

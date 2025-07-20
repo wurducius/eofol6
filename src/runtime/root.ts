@@ -1,7 +1,8 @@
 import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "../util"
-import { appendToDom, getVdom, setVdom, traversePreVdom, traverseVdom } from "../core"
+import { appendToDom, getDefs, getPrevdom, getVdom, setPrevdom, setVdom, traversePreVdom, traverseVdom } from "../core"
 import { RenderUpdateArgs, VDOMItem } from "../types"
 import { initEofol } from "./init"
+import { withErrorOverlay } from "./error-overlay"
 
 let rootInternal: HTMLElement | null
 
@@ -15,12 +16,46 @@ const setRoot = (rootId: string) => {
 // eslint-disable-next-line no-unused-vars
 const renderEofolInternal = (args: RenderUpdateArgs) => {
   const root = getRoot()
-  const dom = traverseVdom(traversePreVdom(getVdom()))
+  const vdom = traversePreVdom(getPrevdom())
+  const lastVdom = getVdom()
+  const dom = traverseVdom(vdom, lastVdom)
+  setVdom(vdom)
   if (root) {
     arrayCombinator(dom, (item) => {
       appendToDom(root, item)
     })
   }
+}
+
+const matchTree = (parent, matcher, callback) => {
+  if (matcher(parent)) {
+    callback(parent)
+  } else {
+    if (Array.isArray(parent.children) && parent.children.length > 0) {
+      return parent.children.map((child) => matchTree(child, matcher, callback))
+    }
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+const renderEofolTargeted = (keys: string | string[]) => {
+  arrayCombinator(keys, (key) => {
+    const lastVdom = getVdom()
+    const root = getRoot()
+    matchTree(
+      lastVdom,
+      (vdom) => vdom.key === key,
+      (found) => {
+        const dom = traverseVdom(found, lastVdom)
+        // setVdom(vdom)
+        if (root) {
+          arrayCombinator(dom, (item) => {
+            appendToDom(root, item)
+          })
+        }
+      },
+    )
+  })
 }
 
 export const forceUpdateEofol = () => {
@@ -38,6 +73,21 @@ export const updateEofol = (args: RenderUpdateArgs) => {
   const root = getRoot()
   if (root) {
     domClearChildren(root)
+    const isStoreUpdate = args.update === "store"
+    if (isStoreUpdate) {
+      const subscribe = args.subscribe
+      const defs = getDefs()
+      // eslint-disable-next-line no-unused-vars
+      const subscribedDefKeys = Object.keys(defs).filter((defKey) => {
+        const def = defs[defKey]
+        return def.subscribe && (def.subscribe === subscribe || def.subscribe.includes(subscribe))
+      })
+      //  renderEofolTargeted(subscribedDefKeys)
+    } else {
+      // eslint-disable-next-line no-unused-vars
+      const key = args.key
+      //   renderEofolTargeted(key)
+    }
     renderEofolInternal(args)
   }
   profilerEnd("update", "Update")
@@ -47,9 +97,11 @@ export const mountEofol = (rootId: string, vdom: () => VDOMItem) => {
   profilerStart("mount")
   const root = setRoot(rootId)
   if (root) {
-    setVdom(vdom)
-    renderEofolInternal({ update: "mount" })
-    initEofol()
+    setPrevdom(vdom)
+    withErrorOverlay(() => {
+      renderEofolInternal({ update: "mount" })
+      initEofol()
+    })
   }
   profilerEnd("mount", "Mount")
 }

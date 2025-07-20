@@ -1,1 +1,0 @@
-export const PROFILER_PRECISION_DIGITS = 1

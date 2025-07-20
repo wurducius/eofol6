@@ -1,7 +1,7 @@
-import { execSync, spawn } from "child_process"
-import { rmSync, existsSync } from "node:fs"
-import { join } from "node:path"
-import { error, getArgv, logEofolScript, PATH, spawnOptions, success } from "./impl/util.js"
+const { execSync, spawn } = require("child_process")
+const { rmSync, existsSync } = require("node:fs")
+const { join } = require("node:path")
+const { error, getArgv, logEofolScript, PATH, spawnOptions, success } = require("./impl/util.cjs")
 
 const argForce = getArgv({ short: "-f", long: "--force" })
 
@@ -27,7 +27,7 @@ if (argForce) {
   console.log(success(`[3/${steps}] Cleaned forcefully npm cache`))
 }
 
-const install = spawn("npm", ["i"], spawnOptions)
+const install = spawn("npm i", [], spawnOptions)
 
 install.on("error", (data) => {
   console.log(error(`ERROR: ${data}`))

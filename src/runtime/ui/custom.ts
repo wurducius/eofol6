@@ -19,3 +19,5 @@ export const row = (children?: Children, attributes?: Attributes) =>
   div(children, { ...(attributes ?? {}), class: cx("row", attributes?.class) })
 export const center = (children?: Children, attributes?: Attributes) =>
   div(children, { ...(attributes ?? {}), class: cx("center", attributes?.class) })
+
+export const spinner = (className?: string) => div(undefined, { class: cx("spinner", className) })

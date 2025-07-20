@@ -1,6 +1,18 @@
 const chalk = require("chalk")
+const path = require("path")
+const { SW_FILENAME } = require("../../constants.js")
 
 const CWD = process.cwd()
+
+const resourcesPath = path.join(CWD, "resources")
+
+const publicPath = path.join(CWD, "public")
+
+const projectPath = path.join(CWD, "project")
+
+const stylesPath = path.join(resourcesPath, "styles")
+
+const swPath = path.join(resourcesPath, SW_FILENAME)
 
 const primary = chalk.cyan
 const success = chalk.green
@@ -43,4 +55,20 @@ const addAsset = (compilation, assetName, nextSource, info, merge) => {
   })
 }
 
-module.exports = { CWD, primary, error, success, formatElapsed, prettyTime, addAsset }
+const transformPathToHtml = (item) => item.replaceAll(path.sep, "/")
+
+module.exports = {
+  CWD,
+  resourcesPath,
+  publicPath,
+  projectPath,
+  stylesPath,
+  primary,
+  error,
+  success,
+  formatElapsed,
+  prettyTime,
+  addAsset,
+  transformPathToHtml,
+  swPath,
+}

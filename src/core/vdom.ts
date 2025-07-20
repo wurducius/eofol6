@@ -1,5 +1,7 @@
-import { arrayCombinator, isString } from "../util"
+import { arrayCombinator, isString, mapCombinator } from "../util"
 import { VDOMItem } from "../types"
+import { getArgs, Lifecycle } from "./lifecycle"
+import { getDef } from "./internal"
 
 const renderTagDom = (vdom: VDOMItem) => {
   const element = document.createElement(vdom.tag)
@@ -31,19 +33,69 @@ export const appendToDom = (root, item) => {
   }
 }
 
-export const traverseVdom = (vdom) => {
+export const traverseVdom = (vdom, lastVdom) => {
   if (vdom === undefined || vdom === false) {
     return undefined
   } else if (isString(vdom)) {
     return vdom
   } else {
-    const visited = renderTagDom(vdom)
+    let visited
+    if (vdom.type === "custom") {
+      const def = getDef(vdom.tag)
+      const args = getArgs({ def, vdom })
+      // console.log(`(R) ${vdom.tag} -> ${lastVdom === undefined ? "LAST" : "FIRST"}`)
+      // console.log(vdom, lastVdom, document.getElementById(vdom.key))
+      if (
+        lastVdom !== undefined &&
+        vdom !== undefined &&
+        lastVdom.key !== undefined &&
+        vdom.key !== undefined &&
+        vdom.key === lastVdom.key
+      ) {
+        //   console.log(`Same key: ${vdom.key}`, document.getElementById(vdom.key))
+        const lastDom = document.getElementById(vdom.key)
+        if (lastDom) {
+          visited = lastDom
+        } else {
+          visited = traverseVdom(def.render(args).render(), lastVdom)
+        }
+      } else {
+        visited = traverseVdom(def.render(args).render(), lastVdom)
+      }
+    } else {
+      visited = renderTagDom(vdom)
+    }
     if (visited && vdom?.children) {
-      arrayCombinator(vdom.children, (child) => {
-        const visitedChild = traverseVdom(child)
+      arrayCombinator(vdom.children, (child, i) => {
+        const childVdom = child?.render ? child.render() : child
+        const visitedChild = traverseVdom(
+          childVdom,
+          lastVdom && Array.isArray(lastVdom.children) && i !== undefined ? lastVdom?.children[i] : undefined,
+        )
         appendToDom(visited, visitedChild)
+        if (childVdom && childVdom.type === "custom") {
+          const def = getDef(childVdom.tag)
+          if (def?.effect) {
+            const args = getArgs({ vdom: childVdom, def })
+            Lifecycle.afterRender({ def, args })
+          }
+        }
       })
     }
     return visited
+  }
+}
+
+export const traversePreVdom = (prevdom: undefined | false | string | { render: () => VDOMItem; key: string }) => {
+  if (prevdom === undefined || prevdom === false) {
+    return undefined
+  } else if (isString(prevdom)) {
+    return prevdom
+  } else {
+    const rendered = prevdom.render()
+    if (rendered !== undefined && !isString(rendered) && Array.isArray(rendered.children)) {
+      rendered.children = mapCombinator(rendered.children, traversePreVdom)
+    }
+    return rendered
   }
 }

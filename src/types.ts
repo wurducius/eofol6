@@ -58,7 +58,12 @@ export type DefArgs = {
   effect?: Effect | Effect[]
 }
 
-export type Internal = { instances: Record<string, Instance>; vdom: () => VDOMItem; defs: Record<string, DefArgs> }
+export type Internal = {
+  instances: Record<string, Instance>
+  prevdom: () => VDOMItem
+  vdom: () => VDOMItem
+  defs: Record<string, DefArgs>
+}
 
 export type LifecycleArgs = { args: Args; def: DefArgs }
 

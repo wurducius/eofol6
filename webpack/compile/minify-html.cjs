@@ -1,4 +1,4 @@
-import { minify } from "html-minifier-terser"
+const { minify } = require("html-minifier-terser")
 
 const minifyOptions = {
   continueOnParseError: true,
@@ -21,4 +21,4 @@ const minifyHtml = (res) =>
     console.log("Minify error", ex)
   })
 
-export default minifyHtml
+module.exports = minifyHtml
