@@ -1,0 +1,7 @@
+// RUN DOCKER CONTAINER
+
+docker run -it -p 8080:8080 node:24 bash
+
+// TEST EOFOL
+
+git clone https://github.com/wurducius/eofol6 && cd eofol6 && npm i && npm start
