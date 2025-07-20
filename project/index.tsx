@@ -281,7 +281,13 @@ mountEofol(
   "root",
   container([
     <h1>Eofol6</h1>,
-    img({ src: "./assets/media/images/logo-lg.png", alt: "Eofol logo", height: LOGO_SIZE, width: LOGO_SIZE }),
+    img({
+      src: "./assets/media/images/logo-lg.png",
+      alt: "Eofol logo",
+      height: LOGO_SIZE,
+      width: LOGO_SIZE,
+      fetchpriority: "high",
+    }),
     <rand />,
     <counter />,
     <propsTestContainer />,

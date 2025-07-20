@@ -16,6 +16,8 @@ const projectPath = path.join(CWD, "project")
 const getViewPath = (view) => path.join(publicPath, `${view}.html`)
 const getStylesheetPath = (view) => path.join(projectPath, `${view}.css`)
 
+const bytesToBase64 = (bytes) => btoa(Array.from(bytes, (byte) => String.fromCodePoint(byte)).join(""))
+
 export const processViews = async (compiler, compilation) => {
   const views = (await fs.promises.readdir(publicPath, { recursive: true }))
     .filter((filename) => filename.endsWith(".html"))
@@ -35,8 +37,16 @@ export const processViews = async (compiler, compilation) => {
             .map((stylePath) => fs.readFileSync(stylePath).toString())
             .join(" ")
 
-          const headNext = `${headOld}<meta name="description" content="${description}"><style>${styles}</style>`
-          return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
+          return fs.promises.readFile(path.join(CWD, "resources", "Roboto-Regular.ttf")).then((fontData) => {
+            const fontFace = `@font-face {
+              font-family: "Roboto";
+              font-style: normal;
+              font-weight: 400;
+              font-display: swap;
+              src: url('data:font/truetype; base64,${bytesToBase64(Uint8Array.from(fontData))}') format("truetype"); }`
+            const headNext = `${headOld}<meta name="description" content="${description}"><style>${fontFace} ${styles}</style>`
+            return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
+          })
         })
       ).toString()
 
