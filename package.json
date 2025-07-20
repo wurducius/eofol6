@@ -17,7 +17,11 @@
     "deploy": "node ./scripts/deploy.cjs",
     "release": "npm run build && npm run deploy",
     "lighthouse": "node ./scripts/lighthouse.cjs",
-    "depcheck": "npx depcheck"
+    "depcheck": "npx depcheck",
+    "docker-build": "docker build -t eofol6-test ./docker",
+    "docker-run": "docker run -p 3000:3000 eofol6-test",
+    "docker-stop": "bash ./docker/docker-stop.sh",
+    "docker-test": "npm run docker-stop && npm run docker-build && npm run docker-run"
   },
   "author": "Jakub Eliáš <wurducius@gmail.com>",
   "license": "MIT",

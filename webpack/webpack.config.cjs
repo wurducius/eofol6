@@ -51,5 +51,8 @@ module.exports.default = (args) => {
       level: "error",
     },
     stats: "none",
+    devServer: {
+      host: "0.0.0.0",
+    },
   }
 }
