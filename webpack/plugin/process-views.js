@@ -37,13 +37,13 @@ export const processViews = async (compiler, compilation) => {
             .map((stylePath) => fs.readFileSync(stylePath).toString())
             .join(" ")
 
-          return fs.promises.readFile(path.join(CWD, "resources", "Roboto-Regular.ttf")).then((fontData) => {
+          return fs.promises.readFile(path.join(CWD, "resources", "Roboto-Regular.woff2")).then((fontData) => {
             const fontFace = `@font-face {
               font-family: "Roboto";
               font-style: normal;
               font-weight: 400;
               font-display: swap;
-              src: url('data:font/truetype; base64,${bytesToBase64(Uint8Array.from(fontData))}') format("truetype"); }`
+              src: url('data:font/woff3; base64,${bytesToBase64(Uint8Array.from(fontData))}') format("woff2"); }`
             const headNext = `${headOld}<meta name="description" content="${description}"><style>${fontFace} ${styles}</style>`
             return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
           })
