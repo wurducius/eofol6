@@ -14,7 +14,7 @@ const injectFonts = (args) =>
               src: ${!args.isInline ? `url(./assets/media/fonts/${args.path})` : `url('data:font/${args.format}; base64,${bytesToBase64(Uint8Array.from(fontData))}')`}
               format("${args.format}");
               }
-              body { font-family: ${args.fontFamily}${args.fontFamilyFallback ? `, ${args.fontFamilyFallback}` : ""} font-size: 1rem; }`,
+              body { font-family: ${args.fontFamily}${args.fontFamilyFallback ? `, ${args.fontFamilyFallback}` : ""}; font-size: 1rem; }`,
   )
 
 module.exports = injectFonts
