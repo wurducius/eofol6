@@ -9,3 +9,5 @@ package-lock.json
 .gitignore
 
 project/**/*.js
+
+resources/styles/error-overlay.css

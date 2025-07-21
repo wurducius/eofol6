@@ -2,6 +2,7 @@ const path = require("path")
 const fs = require("node:fs")
 const { addAsset, publicPath, projectPath, stylesPath } = require("./plugin-util.cjs")
 const injectFonts = require("../compile/inject-fonts.cjs")
+const { ERROR_OVERLAY_ENABLED } = require("../../constants.js")
 
 const MARKER_STYLE_TAG_END = "</head>"
 
@@ -9,7 +10,8 @@ const stylePaths = [
   path.join(stylesPath, "theme.css"),
   path.join(stylesPath, "base.css"),
   path.join(stylesPath, "simple.css"),
-]
+  ERROR_OVERLAY_ENABLED && path.join(stylesPath, "error-overlay.css"),
+].filter(Boolean)
 
 const getViewPath = (view) => path.join(publicPath, `${view}.html`)
 const getStylesheetPath = (view) => path.join(projectPath, `${view}.css`)
