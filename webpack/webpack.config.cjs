@@ -1,10 +1,21 @@
 const path = require("path")
+const fs = require("fs")
 const BundleAnalyzerPluginImport = require("webpack-bundle-analyzer")
 const EofolPluginImport = require("./eofol-webpack-plugin.cjs")
 const Dotenv = require("dotenv-webpack")
+const WebpackCssInlinePlugin = require("webpack-css-inline").default
+const { stylesPath } = require("./plugin/plugin-util.cjs")
+const { ERROR_OVERLAY_ENABLED } = require("../constants.js")
 
 const EofolPlugin = EofolPluginImport.default
 const BundleAnalyzerPlugin = BundleAnalyzerPluginImport.BundleAnalyzerPlugin
+
+const baseStylePaths = [
+  path.join(stylesPath, "theme.css"),
+  path.join(stylesPath, "base.css"),
+  path.join(stylesPath, "simple.css"),
+  ERROR_OVERLAY_ENABLED && path.join(stylesPath, "error-overlay.css"),
+].filter(Boolean)
 
 const CWD = process.cwd()
 
@@ -18,6 +29,15 @@ const buildOptionsDefault = {
   distDirname: "dist",
 }
 
+const views = ["index"]
+const viewStyles = [
+  ...baseStylePaths,
+  ...views.map((view) => {
+    const customStylePath = path.join(CWD, "project", `${view}.css`)
+    return fs.existsSync(customStylePath) ? customStylePath : undefined
+  }),
+].filter(Boolean)
+
 module.exports.default = (args) => {
   const buildOptions = { ...buildOptionsDefault, ...(args ?? {}) }
 
@@ -29,7 +49,14 @@ module.exports.default = (args) => {
       path: path.join(CWD, buildOptions.distDirname),
       publicPath: undefined,
     },
-    plugins: [new EofolPlugin(), buildOptions.analyze && new BundleAnalyzerPlugin(), new Dotenv()].filter(Boolean),
+    plugins: [
+      new EofolPlugin(),
+      buildOptions.analyze && new BundleAnalyzerPlugin(),
+      new Dotenv(),
+      new WebpackCssInlinePlugin({
+        index: viewStyles,
+      }),
+    ].filter(Boolean),
     module: {
       rules: [
         {

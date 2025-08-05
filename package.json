@@ -41,7 +41,8 @@
     "uglify-js": "3.19.3",
     "webpack": "5.101.0",
     "webpack-bundle-analyzer": "4.10.2",
-    "webpack-dev-server": "5.2.2"
+    "webpack-dev-server": "5.2.2",
+    "webpack-css-inline": "1.0.0"
   },
   "devDependencies": {
     "@eslint/js": "9.32.0",
