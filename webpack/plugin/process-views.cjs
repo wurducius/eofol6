@@ -1,20 +1,11 @@
 const path = require("path")
 const fs = require("node:fs")
-const { addAsset, publicPath, projectPath, stylesPath } = require("./plugin-util.cjs")
+const { addAsset, publicPath } = require("./plugin-util.cjs")
 const injectFonts = require("../compile/inject-fonts.cjs")
-const { ERROR_OVERLAY_ENABLED } = require("../../constants.js")
 
 const MARKER_STYLE_TAG_END = "</head>"
 
-const stylePaths = [
-  path.join(stylesPath, "theme.css"),
-  path.join(stylesPath, "base.css"),
-  path.join(stylesPath, "simple.css"),
-  ERROR_OVERLAY_ENABLED && path.join(stylesPath, "error-overlay.css"),
-].filter(Boolean)
-
 const getViewPath = (view) => path.join(publicPath, `${view}.html`)
-const getStylesheetPath = (view) => path.join(projectPath, `${view}.css`)
 
 const processViews = async (compiler, compilation) => {
   const views = (await fs.promises.readdir(publicPath, { recursive: true }))
@@ -27,10 +18,6 @@ const processViews = async (compiler, compilation) => {
         await fs.promises.readFile(getViewPath(view)).then((buffer) => {
           const split = buffer.toString().split(MARKER_STYLE_TAG_END)
           const headOld = split[0]
-          const customStylesheetPath = getStylesheetPath(view)
-          const styles = (fs.existsSync(customStylesheetPath) ? [...stylePaths, customStylesheetPath] : stylePaths)
-            .map((stylePath) => fs.readFileSync(stylePath).toString())
-            .join(" ")
 
           return injectFonts({
             path: "Roboto-Regular.woff2",
@@ -42,7 +29,7 @@ const processViews = async (compiler, compilation) => {
             fontWeight: 400,
             fontDisplay: "swap",
           }).then((fontFace) => {
-            const headNext = `${headOld}<style>${fontFace} ${styles}</style>`
+            const headNext = `${headOld}<style>${fontFace}</style>`
             return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
           })
         })
