@@ -31,6 +31,7 @@
     "dotenv": "17.2.1",
     "dotenv-webpack": "8.1.1",
     "eofol-sx": "0.1.0",
+    "eofol-webpack-plugin": "0.0.1",
     "html-minifier-terser": "7.2.0",
     "http-server": "14.1.1",
     "rimraf": "6.0.1",
@@ -41,8 +42,7 @@
     "uglify-js": "3.19.3",
     "webpack": "5.101.0",
     "webpack-bundle-analyzer": "4.10.2",
-    "webpack-dev-server": "5.2.2",
-    "webpack-css-inline": "1.0.0"
+    "webpack-dev-server": "5.2.2"
   },
   "devDependencies": {
     "@eslint/js": "9.32.0",

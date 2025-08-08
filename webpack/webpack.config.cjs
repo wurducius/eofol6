@@ -1,9 +1,9 @@
 const path = require("path")
-const fs = require("fs")
+const fs = require("node:fs")
 const BundleAnalyzerPluginImport = require("webpack-bundle-analyzer")
 const EofolPluginImport = require("./eofol-webpack-plugin.cjs")
+const EofolWebpackPlugin = require("eofol-webpack-plugin").default
 const Dotenv = require("dotenv-webpack")
-const WebpackCssInlinePlugin = require("webpack-css-inline").default
 const { stylesPath } = require("./plugin/plugin-util.cjs")
 const { ERROR_OVERLAY_ENABLED } = require("../constants.js")
 
@@ -19,6 +19,11 @@ const baseStylePaths = [
 
 const CWD = process.cwd()
 
+const getViewStyles = (view) => {
+  const customStylePath = path.join(CWD, "project", `${view}.css`)
+  return fs.existsSync(customStylePath) ? customStylePath : undefined
+}
+
 const buildOptionsDefault = {
   mode: "development",
   analyze: false,
@@ -29,15 +34,6 @@ const buildOptionsDefault = {
   distDirname: "dist",
 }
 
-const views = ["index"]
-const viewStyles = [
-  ...baseStylePaths,
-  ...views.map((view) => {
-    const customStylePath = path.join(CWD, "project", `${view}.css`)
-    return fs.existsSync(customStylePath) ? customStylePath : undefined
-  }),
-].filter(Boolean)
-
 module.exports.default = (args) => {
   const buildOptions = { ...buildOptionsDefault, ...(args ?? {}) }
 
@@ -47,14 +43,22 @@ module.exports.default = (args) => {
     output: {
       filename: "assets/js/[name].js",
       path: path.join(CWD, buildOptions.distDirname),
-      publicPath: undefined,
+      publicPath: "/",
     },
     plugins: [
       new EofolPlugin(),
       buildOptions.analyze && new BundleAnalyzerPlugin(),
       new Dotenv(),
-      new WebpackCssInlinePlugin({
-        index: viewStyles,
+      new EofolWebpackPlugin({
+        html: { template: ["index.html", "nested1/index.html"] },
+        css: {
+          shared: baseStylePaths,
+          views: {
+            index: getViewStyles("index"),
+            "nested1/index": getViewStyles("nested1/index"),
+          },
+        },
+        js: { views: { index: "assets/js/main.js", "nested1/index": "assets/js/main.js" }, inline: true },
       }),
     ].filter(Boolean),
     module: {
