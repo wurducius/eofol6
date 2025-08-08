@@ -18,3 +18,20 @@ const injectFonts = (args) =>
   )
 
 module.exports = injectFonts
+
+/*
+          return injectFonts({
+            path: "Roboto-Regular.woff2",
+            fontFamily: "Roboto",
+            fontFamilyFallback: "sans-serif",
+            format: "woff2",
+            isInline: false,
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontDisplay: "swap",
+          }).then((fontFace) => {
+            const headNext = `${headOld}<style>${fontFace}</style>`
+            return split.map((part, i) => (i === 0 ? headNext : part)).join(MARKER_STYLE_TAG_END)
+          })
+        })
+*/
