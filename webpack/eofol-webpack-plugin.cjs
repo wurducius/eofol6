@@ -1,6 +1,5 @@
 const { primary, success, error, prettyTime, formatElapsed } = require("./plugin/plugin-util.cjs")
 const { processViews } = require("./plugin/process-views.cjs")
-const { optimizeAssets } = require("./plugin/optimize-assets.cjs")
 
 const PLUGIN_NAME = "Eofol6 webpack plugin"
 
@@ -21,18 +20,6 @@ const onInitCompilation = (compiler) => (compilation) => {
 const onBuildStarted = (compilation) => {}
 
 // eslint-disable-next-line no-unused-vars
-const onCompilationFinished = (compiler) => (compilation) => {
-  compilation.hooks.processAssets.tapPromise(
-    {
-      name: PLUGIN_NAME,
-      //   stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
-      additionalAssets: true,
-    },
-    (compiler) => optimizeAssets(compiler, compilation),
-  )
-}
-
-// eslint-disable-next-line no-unused-vars
 const onAfterCompile = (compiler) => (compilation) => {}
 
 const onDone = (stats, callback) => {
@@ -49,7 +36,6 @@ const onDone = (stats, callback) => {
 class EofolCompilerWebpackPlugin {
   apply(compiler) {
     compiler.hooks.run.tap(PLUGIN_NAME, onBuildStarted)
-    compiler.hooks.compilation.tap(PLUGIN_NAME, onCompilationFinished(compiler))
     compiler.hooks.thisCompilation.tap(PLUGIN_NAME, onInitCompilation(compiler))
     compiler.hooks.afterCompile.tap(PLUGIN_NAME, onAfterCompile(compiler))
     compiler.hooks.done.tapAsync("done", onDone)

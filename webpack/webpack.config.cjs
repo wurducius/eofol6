@@ -50,7 +50,19 @@ module.exports.default = (args) => {
       buildOptions.analyze && new BundleAnalyzerPlugin(),
       new Dotenv(),
       new EofolWebpackPlugin({
-        html: { template: ["index.html", "nested1/index.html"] },
+        html: {
+          template: ["index.html", "nested1/index.html"],
+          header: {
+            title: "Eofol6",
+            description: "All inclusive web framework with zero configuration, batteries included!",
+            keywords: "Web framework",
+            logo: "./assets/media/images/logo.png",
+            imageType: "image/png",
+            imageAlt: "Eofol6 logo",
+            url: "https://eofol.com/eofol6/",
+            theme: "#000000",
+          },
+        },
         css: {
           shared: baseStylePaths,
           views: {
