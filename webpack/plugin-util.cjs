@@ -1,6 +1,6 @@
 const chalk = require("chalk")
 const path = require("path")
-const { SW_FILENAME } = require("../../constants.js")
+const { SW_FILENAME } = require("../constants.js")
 
 const CWD = process.cwd()
 

@@ -1,5 +1,5 @@
 const fs = require("node:fs")
-const { addAsset, publicPath, swPath, transformPathToHtml } = require("../plugin/plugin-util.cjs")
+const { addAsset, publicPath, swPath, transformPathToHtml } = require("../plugin-util.cjs")
 const { SW_FILENAME, SW_FILES_MARKER } = require("../../constants.js")
 
 const injectSw = (compilation) =>

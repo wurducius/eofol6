@@ -4,7 +4,7 @@ const BundleAnalyzerPluginImport = require("webpack-bundle-analyzer")
 const EofolPluginImport = require("./eofol-webpack-plugin.cjs")
 const EofolWebpackPlugin = require("eofol-webpack-plugin").default
 const Dotenv = require("dotenv-webpack")
-const { stylesPath } = require("./plugin/plugin-util.cjs")
+const { stylesPath } = require("./plugin-util.cjs")
 const { ERROR_OVERLAY_ENABLED } = require("../constants.js")
 
 const EofolPlugin = EofolPluginImport.default
@@ -80,7 +80,11 @@ module.exports.default = (args) => {
           fontWeight: 400,
           fontDisplay: "swap",
         },
-        js: { views: { index: "assets/js/main.js", "nested1/index": "assets/js/main.js" }, inline: true },
+        js: {
+          views: { index: "assets/js/main.js", "nested1/index": "assets/js/main.js" },
+          inline: true,
+          babelify: true,
+        },
         inject: {
           add: {
             "assets/media/images/logo.png": "public/assets/media/images/logo.png",
