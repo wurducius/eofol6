@@ -4,7 +4,7 @@ const BundleAnalyzerPluginImport = require("webpack-bundle-analyzer")
 const EofolPluginImport = require("./eofol-webpack-plugin.cjs")
 const EofolWebpackPlugin = require("eofol-webpack-plugin").default
 const Dotenv = require("dotenv-webpack")
-const { stylesPath } = require("./plugin/plugin-util.cjs")
+const { stylesPath } = require("./plugin-util.cjs")
 const { ERROR_OVERLAY_ENABLED } = require("../constants.js")
 
 const EofolPlugin = EofolPluginImport.default
@@ -50,7 +50,19 @@ module.exports.default = (args) => {
       buildOptions.analyze && new BundleAnalyzerPlugin(),
       new Dotenv(),
       new EofolWebpackPlugin({
-        html: { template: ["index.html", "nested1/index.html"] },
+        html: {
+          template: ["index.html", "nested1/index.html"],
+          header: {
+            title: "Eofol6",
+            description: "All inclusive web framework with zero configuration, batteries included!",
+            keywords: "Web framework",
+            imageSrc: "./assets/media/images/logo.png",
+            imageType: "image/png",
+            imageAlt: "Eofol6 logo",
+            url: "https://eofol.com/eofol6/",
+            theme: "#000000",
+          },
+        },
         css: {
           shared: baseStylePaths,
           views: {
@@ -58,7 +70,30 @@ module.exports.default = (args) => {
             "nested1/index": getViewStyles("nested1/index"),
           },
         },
-        js: { views: { index: "assets/js/main.js", "nested1/index": "assets/js/main.js" }, inline: true },
+        font: {
+          path: "resources/Roboto-Regular.woff2",
+          fontFamily: "Roboto",
+          fontFamilyFallback: "sans-serif",
+          format: "woff2",
+          inline: false,
+          fontStyle: "normal",
+          fontWeight: 400,
+          fontDisplay: "swap",
+        },
+        js: {
+          views: { index: "assets/js/main.js", "nested1/index": "assets/js/main.js" },
+          inline: true,
+          babelify: true,
+        },
+        inject: {
+          add: {
+            "assets/media/images/logo.png": "public/assets/media/images/logo.png",
+            "assets/media/images/logo-lg.png": "public/assets/media/images/logo-lg.png",
+            "assets/media/images/logo-md.png": "public/assets/media/images/logo-md.png",
+            "assets/media/images/logo-sm.png": "public/assets/media/images/logo-sm.png",
+            "assets/media/icons/phi.svg": "public/assets/media/icons/phi.svg",
+          },
+        },
       }),
     ].filter(Boolean),
     module: {

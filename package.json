@@ -31,7 +31,7 @@
     "dotenv": "17.2.1",
     "dotenv-webpack": "8.1.1",
     "eofol-sx": "0.1.0",
-    "eofol-webpack-plugin": "0.0.1",
+    "eofol-webpack-plugin": "file:../eofol-webpack-plugin",
     "html-minifier-terser": "7.2.0",
     "http-server": "14.1.1",
     "rimraf": "6.0.1",

@@ -12,7 +12,8 @@ const build = () => {
         console.log(success(`[1/2] Webpack compilation took: ${prettyTime(webpackBuilt - start)}`))
       }
       touchBuildDirs()
-      copyPublicDir(PATH.publicPath, PATH.distPath).then(() => {
+      // copyPublicDir(PATH.publicPath, PATH.distPath).then(() => {
+      new Promise((resolve) => resolve(true)).then(() => {
         const publicDirCopied = new Date().valueOf()
         if (PROFILER_COMPILE) {
           console.log(success(`[2/2] Copying public directory took: ${prettyTime(publicDirCopied - webpackBuilt)}`))

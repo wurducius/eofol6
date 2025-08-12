@@ -1,6 +1,6 @@
 const path = require("path")
 const fs = require("node:fs")
-const { resourcesPath } = require("../plugin/plugin-util.cjs")
+const { resourcesPath } = require("../plugin-util.cjs")
 
 const bytesToBase64 = (bytes) => btoa(Array.from(bytes, (byte) => String.fromCodePoint(byte)).join(""))
 
