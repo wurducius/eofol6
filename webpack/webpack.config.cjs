@@ -75,12 +75,21 @@ module.exports.default = (args) => {
           fontFamily: "Roboto",
           fontFamilyFallback: "sans-serif",
           format: "woff2",
-          isInline: false,
+          inline: false,
           fontStyle: "normal",
           fontWeight: 400,
           fontDisplay: "swap",
         },
         js: { views: { index: "assets/js/main.js", "nested1/index": "assets/js/main.js" }, inline: true },
+        inject: {
+          add: {
+            "assets/media/images/logo.png": "public/assets/media/images/logo.png",
+            "assets/media/images/logo-lg.png": "public/assets/media/images/logo-lg.png",
+            "assets/media/images/logo-md.png": "public/assets/media/images/logo-md.png",
+            "assets/media/images/logo-sm.png": "public/assets/media/images/logo-sm.png",
+            "assets/media/icons/phi.svg": "public/assets/media/icons/phi.svg",
+          },
+        },
       }),
     ].filter(Boolean),
     module: {
