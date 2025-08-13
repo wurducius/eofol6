@@ -1,14 +1,14 @@
 const path = require("path")
 const fs = require("node:fs")
-const BundleAnalyzerPluginImport = require("webpack-bundle-analyzer")
-const EofolPluginImport = require("./eofol-webpack-plugin.cjs")
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
+const EofolPlugin = require("./eofol-webpack-plugin.cjs").default
 const EofolWebpackPlugin = require("eofol-webpack-plugin").default
 const Dotenv = require("dotenv-webpack")
-const { stylesPath } = require("./plugin-util.cjs")
 const { ERROR_OVERLAY_ENABLED } = require("../constants.js")
 
-const EofolPlugin = EofolPluginImport.default
-const BundleAnalyzerPlugin = BundleAnalyzerPluginImport.BundleAnalyzerPlugin
+const CWD = process.cwd()
+const resourcesPath = path.join(CWD, "resources")
+const stylesPath = path.join(resourcesPath, "styles")
 
 const baseStylePaths = [
   path.join(stylesPath, "theme.css"),
@@ -16,8 +16,6 @@ const baseStylePaths = [
   path.join(stylesPath, "simple.css"),
   ERROR_OVERLAY_ENABLED && path.join(stylesPath, "error-overlay.css"),
 ].filter(Boolean)
-
-const CWD = process.cwd()
 
 const getViewStyles = (view) => {
   const customStylePath = path.join(CWD, "project", `${view}.css`)
@@ -70,21 +68,25 @@ module.exports.default = (args) => {
             "nested1/index": getViewStyles("nested1/index"),
           },
         },
-        font: {
-          path: "resources/Roboto-Regular.woff2",
-          fontFamily: "Roboto",
-          fontFamilyFallback: "sans-serif",
-          format: "woff2",
-          inline: false,
-          fontStyle: "normal",
-          fontWeight: 400,
-          fontDisplay: "swap",
-        },
+        font: [
+          {
+            path: "resources/Roboto-Regular.woff2",
+            fontFamily: "Roboto",
+            fontFamilyFallback: "sans-serif",
+            format: "woff2",
+            inline: false,
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontDisplay: "swap",
+            primary: true,
+          },
+        ],
         js: {
           views: { index: "assets/js/main.js", "nested1/index": "assets/js/main.js" },
           inline: true,
           babelify: true,
         },
+        /*
         inject: {
           add: {
             "assets/media/images/logo.png": "public/assets/media/images/logo.png",
@@ -94,6 +96,10 @@ module.exports.default = (args) => {
             "assets/media/icons/phi.svg": "public/assets/media/icons/phi.svg",
           },
         },
+        */
+        manifest: { shortName: "eofol6", name: "Eofol6", startUrl: ".", display: "standalone", bgColor: "#000000" },
+        theme: "#ff0000",
+        icon: "media/logo.png",
       }),
     ].filter(Boolean),
     module: {
