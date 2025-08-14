@@ -84,20 +84,15 @@ module.exports.default = (args) => {
           inline: true,
           babelify: true,
         },
-        /*
-        inject: {
-          add: {
-            "assets/media/images/logo.png": "public/assets/media/images/logo.png",
-            "assets/media/images/logo-lg.png": "public/assets/media/images/logo-lg.png",
-            "assets/media/images/logo-md.png": "public/assets/media/images/logo-md.png",
-            "assets/media/images/logo-sm.png": "public/assets/media/images/logo-sm.png",
-            "assets/media/icons/phi.svg": "public/assets/media/icons/phi.svg",
-          },
-        },
-        */
         manifest: { shortName: "eofol6", name: "Eofol6", startUrl: ".", display: "standalone", bgColor: "#000000" },
         theme: "#ff0000",
         icon: "media/logo.png",
+        preload: [
+          { url: "assets/media/images/logo-lg.png", as: "image" },
+          { url: "assets/media/images/logo-sm.png", as: "image", fetchPriority: "high" },
+        ],
+        prefetch: ["nested1/index.html"],
+        preconnect: ["https://eofol.com"],
       }),
     ].filter(Boolean),
     module: {
@@ -126,3 +121,15 @@ module.exports.default = (args) => {
     },
   }
 }
+
+/*
+        inject: {
+          add: {
+            "assets/media/images/logo.png": "public/assets/media/images/logo.png",
+            "assets/media/images/logo-lg.png": "public/assets/media/images/logo-lg.png",
+            "assets/media/images/logo-md.png": "public/assets/media/images/logo-md.png",
+            "assets/media/images/logo-sm.png": "public/assets/media/images/logo-sm.png",
+            "assets/media/icons/phi.svg": "public/assets/media/icons/phi.svg",
+          },
+        },
+        */
