@@ -1,0 +1,132 @@
+.flex {
+  display: flex;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  align-items: center;
+  padding: var(--container-padding);
+  gap: var(--container-gap);
+}
+
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.25rem;
+}
+
+h3 {
+  font-size: 1.875rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1.125rem;
+}
+
+a {
+  font-size: 1rem;
+  text-decoration: none;
+  font-family: inherit;
+}
+
+button {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+textarea {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+select {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid purple;
+  background-color: #111111;
+  color: #d4d4d4;
+  height: 40px;
+  line-height: 1.25rem;
+  font-family: inherit;
+  font-size: 14px;
+  outline: 0;
+  border-radius: 4px;
+}
+
+input:focus {
+  border-color: magenta;
+}
+
+body::-webkit-scrollbar {
+  width: 16px;
+}
+
+body::-webkit-scrollbar-thumb {
+  height: 56px;
+  border-radius: 8px;
+  border: 4px solid transparent;
+  background-color: hsl(0, 0%, 67%);
+  background-clip: content-box;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 4px solid darkmagenta;
+  width: 28px;
+  height: 28px;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
