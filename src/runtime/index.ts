@@ -1,6 +1,5 @@
 export * from "./init"
 export * from "./root"
 export * from "./ui"
-export * from "./sw"
 export * from "./store"
 export * from "./stateful"

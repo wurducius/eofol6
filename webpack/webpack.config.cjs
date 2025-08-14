@@ -4,7 +4,6 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const EofolPlugin = require("./eofol-webpack-plugin.cjs").default
 const EofolWebpackPlugin = require("eofol-webpack-plugin").default
 const Dotenv = require("dotenv-webpack")
-const { ERROR_OVERLAY_ENABLED } = require("../constants.js")
 
 const CWD = process.cwd()
 const resourcesPath = path.join(CWD, "resources")
@@ -14,7 +13,6 @@ const baseStylePaths = [
   path.join(stylesPath, "theme.css"),
   path.join(stylesPath, "base.css"),
   path.join(stylesPath, "simple.css"),
-  ERROR_OVERLAY_ENABLED && path.join(stylesPath, "error-overlay.css"),
 ].filter(Boolean)
 
 const getViewStyles = (view) => {
@@ -86,20 +84,21 @@ module.exports.default = (args) => {
           inline: true,
           babelify: true,
         },
-        /*
-        inject: {
-          add: {
-            "assets/media/images/logo.png": "public/assets/media/images/logo.png",
-            "assets/media/images/logo-lg.png": "public/assets/media/images/logo-lg.png",
-            "assets/media/images/logo-md.png": "public/assets/media/images/logo-md.png",
-            "assets/media/images/logo-sm.png": "public/assets/media/images/logo-sm.png",
-            "assets/media/icons/phi.svg": "public/assets/media/icons/phi.svg",
-          },
-        },
-        */
         manifest: { shortName: "eofol6", name: "Eofol6", startUrl: ".", display: "standalone", bgColor: "#000000" },
         theme: "#ff0000",
         icon: "media/logo.png",
+        resourceHints: {
+          preload: [
+            { url: "assets/media/images/logo-lg.png", as: "image" },
+            { url: "assets/media/images/logo-sm.png", as: "image", fetchPriority: "high" },
+          ],
+          prefetch: ["nested1/index.html"],
+          preconnect: ["https://eofol.com"],
+        },
+        compression: {
+          gzip: true,
+          brotli: true,
+        },
       }),
     ].filter(Boolean),
     module: {
@@ -128,3 +127,15 @@ module.exports.default = (args) => {
     },
   }
 }
+
+/*
+        inject: {
+          add: {
+            "assets/media/images/logo.png": "public/assets/media/images/logo.png",
+            "assets/media/images/logo-lg.png": "public/assets/media/images/logo-lg.png",
+            "assets/media/images/logo-md.png": "public/assets/media/images/logo-md.png",
+            "assets/media/images/logo-sm.png": "public/assets/media/images/logo-sm.png",
+            "assets/media/icons/phi.svg": "public/assets/media/icons/phi.svg",
+          },
+        },
+        */
