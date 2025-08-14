@@ -4,7 +4,6 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const EofolPlugin = require("./eofol-webpack-plugin.cjs").default
 const EofolWebpackPlugin = require("eofol-webpack-plugin").default
 const Dotenv = require("dotenv-webpack")
-const { ERROR_OVERLAY_ENABLED } = require("../constants.js")
 
 const CWD = process.cwd()
 const resourcesPath = path.join(CWD, "resources")
@@ -14,7 +13,6 @@ const baseStylePaths = [
   path.join(stylesPath, "theme.css"),
   path.join(stylesPath, "base.css"),
   path.join(stylesPath, "simple.css"),
-  ERROR_OVERLAY_ENABLED && path.join(stylesPath, "error-overlay.css"),
 ].filter(Boolean)
 
 const getViewStyles = (view) => {
