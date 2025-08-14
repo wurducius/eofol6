@@ -87,12 +87,18 @@ module.exports.default = (args) => {
         manifest: { shortName: "eofol6", name: "Eofol6", startUrl: ".", display: "standalone", bgColor: "#000000" },
         theme: "#ff0000",
         icon: "media/logo.png",
-        preload: [
-          { url: "assets/media/images/logo-lg.png", as: "image" },
-          { url: "assets/media/images/logo-sm.png", as: "image", fetchPriority: "high" },
-        ],
-        prefetch: ["nested1/index.html"],
-        preconnect: ["https://eofol.com"],
+        resourceHints: {
+          preload: [
+            { url: "assets/media/images/logo-lg.png", as: "image" },
+            { url: "assets/media/images/logo-sm.png", as: "image", fetchPriority: "high" },
+          ],
+          prefetch: ["nested1/index.html"],
+          preconnect: ["https://eofol.com"],
+        },
+        compression: {
+          gzip: true,
+          brotli: true,
+        },
       }),
     ].filter(Boolean),
     module: {
