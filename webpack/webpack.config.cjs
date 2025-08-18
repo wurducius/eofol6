@@ -1,24 +1,11 @@
 const path = require("path")
-const fs = require("node:fs")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 const EofolPlugin = require("./eofol-webpack-plugin.cjs").default
 const EofolWebpackPlugin = require("eofol-webpack-plugin").default
 const Dotenv = require("dotenv-webpack")
+const eofolWebpackPluginOptions = require("./eofol-webpack-plugin-options.cjs")
 
 const CWD = process.cwd()
-const resourcesPath = path.join(CWD, "resources")
-const stylesPath = path.join(resourcesPath, "styles")
-
-const baseStylePaths = [
-  path.join(stylesPath, "theme.css"),
-  path.join(stylesPath, "base.css"),
-  path.join(stylesPath, "simple.css"),
-].filter(Boolean)
-
-const getViewStyles = (view) => {
-  const customStylePath = path.join(CWD, "project", `${view}.css`)
-  return fs.existsSync(customStylePath) ? customStylePath : undefined
-}
 
 const buildOptionsDefault = {
   mode: "development",
@@ -45,61 +32,7 @@ module.exports.default = (args) => {
       new EofolPlugin(),
       buildOptions.analyze && new BundleAnalyzerPlugin(),
       new Dotenv(),
-      new EofolWebpackPlugin({
-        html: {
-          template: ["index.html", "nested1/index.html"],
-          header: {
-            title: "Eofol6",
-            description: "All inclusive web framework with zero configuration, batteries included!",
-            keywords: "Web framework",
-            imageSrc: "./assets/media/images/logo.png",
-            imageType: "image/png",
-            imageAlt: "Eofol6 logo",
-            url: "https://eofol.com/eofol6/",
-            theme: "#000000",
-          },
-        },
-        css: {
-          shared: baseStylePaths,
-          views: {
-            index: getViewStyles("index"),
-            "nested1/index": getViewStyles("nested1/index"),
-          },
-        },
-        font: [
-          {
-            path: "resources/Roboto-Regular.woff2",
-            fontFamily: "Roboto",
-            fontFamilyFallback: "sans-serif",
-            format: "woff2",
-            inline: false,
-            fontStyle: "normal",
-            fontWeight: 400,
-            fontDisplay: "swap",
-            primary: true,
-          },
-        ],
-        js: {
-          views: { index: "assets/js/main.js", "nested1/index": "assets/js/main.js" },
-          inline: true,
-          babelify: true,
-        },
-        manifest: { shortName: "eofol6", name: "Eofol6", startUrl: ".", display: "standalone", bgColor: "#000000" },
-        theme: "#ff0000",
-        icon: "media/logo.png",
-        resourceHints: {
-          preload: [
-            { url: "assets/media/images/logo-lg.png", as: "image" },
-            { url: "assets/media/images/logo-sm.png", as: "image", fetchPriority: "high" },
-          ],
-          prefetch: ["nested1/index.html"],
-          preconnect: ["https://eofol.com"],
-        },
-        compression: {
-          gzip: true,
-          brotli: true,
-        },
-      }),
+      new EofolWebpackPlugin(eofolWebpackPluginOptions),
     ].filter(Boolean),
     module: {
       rules: [
@@ -127,15 +60,3 @@ module.exports.default = (args) => {
     },
   }
 }
-
-/*
-        inject: {
-          add: {
-            "assets/media/images/logo.png": "public/assets/media/images/logo.png",
-            "assets/media/images/logo-lg.png": "public/assets/media/images/logo-lg.png",
-            "assets/media/images/logo-md.png": "public/assets/media/images/logo-md.png",
-            "assets/media/images/logo-sm.png": "public/assets/media/images/logo-sm.png",
-            "assets/media/icons/phi.svg": "public/assets/media/icons/phi.svg",
-          },
-        },
-        */

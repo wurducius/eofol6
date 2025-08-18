@@ -1,5 +1,4 @@
 const fs = require("node:fs")
-const path = require("path")
 const webpack = require("webpack")
 const getWebpackConfigImport = require("../../webpack/webpack.config.cjs")
 const { PATH } = require("./util.cjs")
@@ -31,21 +30,6 @@ const touchBuildDirs = () => {
   })
 }
 
-const copyPublicDir = (source, target) => {
-  return fs.promises.readdir(source, { recursive: true }).then((dir) =>
-    Promise.all(
-      dir.map((file) => {
-        const sourcePath = path.join(source, file)
-        const targetPath = path.join(target, file)
-        if (file.endsWith("html") || fs.lstatSync(path.join(source, file)).isDirectory()) {
-          return
-        }
-        return fs.promises.cp(sourcePath, targetPath)
-      }),
-    ),
-  )
-}
-
 const buildWebpack = (onSuccess, onError) => {
   return webpack(webpackConfig, (err, stats) => {
     if (err || stats.hasErrors()) {
@@ -61,4 +45,4 @@ const buildWebpack = (onSuccess, onError) => {
   })
 }
 
-module.exports = { touch, touchBuildDirs, copyPublicDir, buildWebpack }
+module.exports = { touch, touchBuildDirs, buildWebpack }
