@@ -1,4 +1,4 @@
-import { arrayCombinator, isString, mapCombinator } from "../util"
+import { arrayCombinator, isString, mapCombinator } from "eofol-runtime"
 import { VDOMItem } from "../types"
 import { getArgs, Lifecycle } from "./lifecycle"
 import { getDef } from "./internal"
