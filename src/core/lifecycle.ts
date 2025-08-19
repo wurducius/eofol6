@@ -1,7 +1,7 @@
 import { Args, DefArgs, LifecycleArgs, State, VDOMItem } from "../types"
 import { getInstance, setInstance } from "./internal"
 import { updateEofol } from "../runtime"
-import { arrayCombinator, mergeDeep } from "../util"
+import { arrayCombinator, mergeDeep } from "eofol-runtime"
 
 export const getArgs = (x: { def: DefArgs; vdom: VDOMItem }): Args => {
   const { def, vdom } = x

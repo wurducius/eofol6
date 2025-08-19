@@ -1,7 +1,7 @@
-import { arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "../util"
+import ConfigRuntime from "../../config-runtime"
 import { appendToDom, getDefs, getPrevdom, getVdom, setPrevdom, setVdom, traversePreVdom, traverseVdom } from "../core"
 import { RenderUpdateArgs, VDOMItem } from "../types"
-import { initEofol } from "./init"
+import { initEofol, arrayCombinator, domClearChildren, profilerEnd, profilerStart } from "eofol-runtime"
 
 let rootInternal: HTMLElement | null
 
@@ -58,17 +58,17 @@ const renderEofolTargeted = (keys: string | string[]) => {
 }
 
 export const forceUpdateEofol = () => {
-  profilerStart("forceUpdate")
+  profilerStart("forceUpdate", ConfigRuntime)
   const root = getRoot()
   if (root) {
     domClearChildren(root)
     renderEofolInternal({ update: "forceUpdate" })
   }
-  profilerEnd("forceUpdate", "Force update")
+  profilerEnd("forceUpdate", "Force update", ConfigRuntime)
 }
 
 export const updateEofol = (args: RenderUpdateArgs) => {
-  profilerStart("update")
+  profilerStart("update", ConfigRuntime)
   const root = getRoot()
   if (root) {
     domClearChildren(root)
@@ -89,16 +89,16 @@ export const updateEofol = (args: RenderUpdateArgs) => {
     }
     renderEofolInternal(args)
   }
-  profilerEnd("update", "Update")
+  profilerEnd("update", "Update", ConfigRuntime)
 }
 
 export const mountEofol = (rootId: string, vdom: () => VDOMItem) => {
-  profilerStart("mount")
+  profilerStart("mount", ConfigRuntime)
   const root = setRoot(rootId)
   if (root) {
     setPrevdom(vdom)
     renderEofolInternal({ update: "mount" })
-    initEofol()
+    initEofol(ConfigRuntime)
   }
-  profilerEnd("mount", "Mount")
+  profilerEnd("mount", "Mount", ConfigRuntime)
 }

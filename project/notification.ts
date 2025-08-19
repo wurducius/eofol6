@@ -1,4 +1,4 @@
-import { cx, generateId } from "../src"
+import { cx, generateId } from "eofol-runtime"
 
 const NOTIFICATION_DURATION_MS = 3000
 

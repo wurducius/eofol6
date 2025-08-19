@@ -1,34 +1,38 @@
-import {
-  center,
-  col,
-  container,
-  createProjection,
-  createStore,
-  define,
-  div,
-  forceUpdateEofol,
-  h1,
-  h2,
-  hasData,
-  input,
-  mergeStore,
-  mountEofol,
-  resetStore,
-  row,
-  selector,
-  setStore,
-  spinner,
-  isLoading,
-  useReq,
-  img,
-} from "../src"
 import { getRandomString, useGeolocation } from "./util"
 import { eButton, eContainer } from "./e-ui"
 import { notifyError } from "./notification"
 import { sx } from "eofol-sx"
+import { define, forceUpdateEofol, mountEofol, updateEofol } from "../src"
 import { j } from "../src/core/pragma"
+import {
+  div,
+  h1,
+  h2,
+  hasData,
+  isLoading,
+  useReq,
+  createStore,
+  createProjection,
+  selector,
+  resetStore as resetStoreImpl,
+  mergeStore as mergeStoreImpl,
+  setStore as setStoreImpl,
+  center,
+  col,
+  container,
+  input,
+  row,
+  spinner,
+  img,
+} from "eofol-runtime"
+
+const resetStore = (name: string) => resetStoreImpl(name, updateEofol)
+const mergeStore = (name: string, next: object) => mergeStoreImpl(name, next, updateEofol)
+const setStore = (name: string, next: object) => setStoreImpl(name, next, updateEofol)
 
 const React = { createElement: j }
+
+// const React = { createElement: j(getDef) }
 
 define("rand", {
   render: () =>

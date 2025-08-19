@@ -1,7 +1,1 @@
-export * from "./dom"
 export * from "./math"
-export * from "./func"
-export * from "./styles"
-export * from "./obj"
-export * from "./profiler"
-export * from "./log"

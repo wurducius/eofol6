@@ -30,6 +30,7 @@
     "chalk": "4.1.2",
     "dotenv": "17.2.1",
     "dotenv-webpack": "8.1.1",
+    "eofol-runtime": "0.0.1",
     "eofol-sx": "0.1.0",
     "eofol-webpack-plugin": "0.0.6",
     "http-server": "14.1.1",
