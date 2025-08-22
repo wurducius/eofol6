@@ -6,10 +6,17 @@
 - targeted eofol update
 - vdom virtual element
 
-## Secondary
-
-- error overlay
-
 ## Cosmetic
 
 - typing vdom.ts
+
+## eofol-runtime
+
+## eofol-scripts
+
+- Fix generateId
+- Fix command line for linux, special case fix docker scripts
+- Inject vars into docker scripts
+- Inject vars into build scripts
+- Inject config compile
+- Make webpack config file path configurable

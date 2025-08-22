@@ -32,7 +32,7 @@
     "dotenv": "17.2.1",
     "dotenv-webpack": "8.1.1",
     "eofol-runtime": "0.0.1",
-    "eofol-scripts": "file:../eofol-scripts",
+    "eofol-scripts": "0.0.1",
     "eofol-sx": "0.1.0",
     "eofol-webpack-plugin": "0.0.6",
     "ts-loader": "9.5.2",
