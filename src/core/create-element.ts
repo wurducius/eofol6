@@ -1,5 +1,13 @@
 import { Attributes, Children, Properties, Props } from "../types"
-import { generateId } from "../util"
+import ConfigRuntime from "../../config-runtime"
+
+const generateIdInternal = (length: number) => () =>
+  Array(length)
+    .fill("")
+    .map(() => Math.random().toString(36).charAt(2))
+    .join("")
+
+const generateId = generateIdInternal(ConfigRuntime.KEY_LENGTH)
 
 export const createElement = (
   tag: string,
